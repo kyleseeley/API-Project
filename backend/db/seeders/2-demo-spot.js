@@ -23,9 +23,6 @@ module.exports = {
           name: "App Academy",
           description: "Place where web developers are created",
           price: 123,
-          avgRating: 4.5,
-          previewImage:
-            "https://ca-times.brightspotcdn.com/dims4/default/ec1e935/2147483647/strip/true/crop/853x1174+0+0/resize/1200x1652!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F56%2Ffb%2Fc6a8870e648199bbd5cdb3947765%2Fla-fi-hotprop-full-house-jeff-franklin-2019051-001",
         },
         {
           ownerId: 2,
@@ -34,13 +31,10 @@ module.exports = {
           state: "Colorado",
           country: "United States of America",
           lat: 39.7392,
-          lng: 104.9903,
+          lng: -104.9903,
           name: "Rocky Mountains",
           description: "Beautiful scenery",
           price: 350,
-          avgRating: 3.9,
-          previewImage:
-            "https://image.cnbcfm.com/api/v1/image/107127831-4001_E_Quincy_Avenue-149.jpg?v=1664790001",
         },
         {
           ownerId: 3,
@@ -49,12 +43,10 @@ module.exports = {
           state: "Florida",
           country: "United States of America",
           lat: 25.7617,
-          lng: 80.1918,
+          lng: -80.1918,
           name: "South Beach Palace",
           description: "Welcome to Miami",
           price: 689,
-          avgRating: 2.7,
-          previewImage: "https://images.wsj.net/im-535702/?width=1278&size=1",
         },
       ],
       {}
