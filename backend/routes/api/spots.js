@@ -88,10 +88,10 @@ router.get("/current", requireAuth, async (req, res) => {
   res.json(formattedSpots);
 });
 
-router.get("/:id", async (req, res) => {
-  const { id } = req.params;
+router.get("/:spotId", async (req, res) => {
+  const { spotId } = req.params;
 
-  const spot = await Spot.findByPk(id, {
+  const spot = await Spot.findByPk(spotId, {
     include: [
       {
         model: SpotImage,
@@ -131,6 +131,90 @@ router.get("/:id", async (req, res) => {
     return res.status(404).json({ message: "Spot couldn't be found" });
   }
   res.json(spot);
+});
+
+router.post("/", requireAuth, async (req, res) => {
+  const { address, city, state, country, lat, lng, name, description, price } =
+    req.body;
+
+  const ownerId = req.user.id;
+
+  const errors = {};
+  if (!address) {
+    errors.address = "Street address is required";
+  }
+  if (!city) {
+    errors.city = "City is required";
+  }
+  if (!state) {
+    errors.state = "State is required";
+  }
+  if (!country) {
+    errors.country = "Country is required";
+  }
+  if (isNaN(parseFloat(lat))) {
+    errors.lat = "Latitude is not valid";
+  }
+  if (isNaN(parseFloat(lng))) {
+    errors.lng = "Longitude is not valid";
+  }
+  if (!name || name.length > 49) {
+    errors.name = "Name must be less than 50 characters";
+  }
+  if (!description) {
+    errors.description = "Description is required";
+  }
+  if (!price) {
+    errors.price = "Price per day is required";
+  }
+
+  // If there are validation errors, return the error response
+  if (Object.keys(errors).length > 0) {
+    return res.status(400).json({
+      message: "Bad Request",
+      errors,
+    });
+  }
+
+  const newSpot = await Spot.create({
+    ownerId,
+    address,
+    city,
+    state,
+    country,
+    lat,
+    lng,
+    name,
+    description,
+    price,
+  });
+  return res.json(newSpot);
+});
+
+router.post("/:spotId/images", requireAuth, async (req, res) => {
+  const { spotId } = req.params;
+  const { url, preview } = req.body;
+  const ownerId = req.user.id;
+
+  const spot = await Spot.findOne({
+    where: { id: spotId, ownerId },
+  });
+
+  if (!spot) {
+    res.status(404).json({ message: "Spot couldn't be found" });
+  }
+
+  const newImage = await SpotImage.create({
+    spotId,
+    url,
+    preview,
+  });
+  const { id } = newImage;
+  res.json({
+    id,
+    url,
+    preview,
+  });
 });
 
 module.exports = router;
