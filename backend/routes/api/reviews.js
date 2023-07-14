@@ -54,23 +54,8 @@ router.get("/current", requireAuth, async (req, res) => {
     ],
   });
 
-  // Modify each review object in the array
-  const formattedReviews = allReviews.map((review) => {
-    const { Spot, ReviewImages, User, ...rest } = review.toJSON();
-
-    // Check if Spot is defined
-    const previewImage = Spot ? Spot.previewImage : null;
-
-    return {
-      ...rest,
-      User,
-      Spot: Spot ? { ...Spot, previewImage } : null,
-      ReviewImages: ReviewImages.map((image) => image),
-    };
-  });
-
   const response = {
-    Reviews: formattedReviews,
+    Reviews: allReviews,
   };
 
   res.json(response);
