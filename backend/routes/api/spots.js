@@ -217,4 +217,89 @@ router.post("/:spotId/images", requireAuth, async (req, res) => {
   });
 });
 
+router.put("/:spotId", requireAuth, async (req, res) => {
+  const { spotId } = req.params;
+  const { address, city, state, country, lat, lng, name, description, price } =
+    req.body;
+  const ownerId = req.user.id;
+
+  const errors = {};
+  if (!address) {
+    errors.address = "Street address is required";
+  }
+  if (!city) {
+    errors.city = "City is required";
+  }
+  if (!state) {
+    errors.state = "State is required";
+  }
+  if (!country) {
+    errors.country = "Country is required";
+  }
+  if (isNaN(parseFloat(lat))) {
+    errors.lat = "Latitude is not valid";
+  }
+  if (isNaN(parseFloat(lng))) {
+    errors.lng = "Longitude is not valid";
+  }
+  if (!name || name.length > 49) {
+    errors.name = "Name must be less than 50 characters";
+  }
+  if (!description) {
+    errors.description = "Description is required";
+  }
+  if (!price) {
+    errors.price = "Price per day is required";
+  }
+
+  // If there are validation errors, return the error response
+  if (Object.keys(errors).length > 0) {
+    return res.status(400).json({
+      message: "Bad Request",
+      errors,
+    });
+  }
+
+  const spot = await Spot.findOne({
+    where: { id: spotId, ownerId },
+  });
+
+  if (!spot) {
+    res.status(404).json({ message: "Spot couldn't be found" });
+  }
+
+  spot.address = address;
+  spot.city = city;
+  spot.state = state;
+  spot.country = country;
+  spot.lat = lat;
+  spot.lng = lng;
+  spot.name = name;
+  spot.description = description;
+  spot.price = price;
+  await spot.save();
+
+  res.json(spot);
+});
+
+router.delete("/:spotId", requireAuth, async (req, res) => {
+  const { spotId } = req.params;
+  const ownerId = req.user.id;
+
+  const spot = await Spot.findOne({
+    where: { id: spotId, ownerId },
+    include: [{ model: SpotImage }],
+  });
+
+  if (!spot) {
+    res.status(404).json({ message: "Spot couldn't be found" });
+  }
+
+  await Promise.all(spot.SpotImages.map((image) => image.destroy()));
+
+  await spot.destroy();
+
+  res.json({ message: "Successfully deleted" });
+});
+
 module.exports = router;
