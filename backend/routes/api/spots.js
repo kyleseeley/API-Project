@@ -1,7 +1,13 @@
 const express = require("express");
 const { requireAuth } = require("../../utils/auth");
 
-const { Spot, User, Review, SpotImage } = require("../../db/models");
+const {
+  Spot,
+  User,
+  Review,
+  SpotImage,
+  ReviewImage,
+} = require("../../db/models");
 const { Sequelize } = require("sequelize");
 
 const router = express.Router();
@@ -300,6 +306,100 @@ router.delete("/:spotId", requireAuth, async (req, res) => {
   await spot.destroy();
 
   res.json({ message: "Successfully deleted" });
+});
+
+router.get("/:spotId/reviews", async (req, res) => {
+  const { spotId } = req.params;
+
+  const spot = await Spot.findByPk(spotId);
+
+  if (!spot) {
+    res.status(404).json({ message: "Spot couldn't be found" });
+  }
+
+  const reviews = await Review.findAll({
+    where: { spotId },
+    include: [
+      {
+        model: User,
+        as: "User",
+        attributes: ["id", "firstName", "lastName"],
+      },
+      {
+        model: ReviewImage,
+        as: "ReviewImages",
+        attributes: ["id", "url"],
+      },
+    ],
+  });
+
+  res.json({ Reviews: reviews });
+});
+
+router.post("/:spotId/reviews", requireAuth, async (req, res) => {
+  const { spotId } = req.params;
+  const userId = req.user.id;
+  const { review, stars } = req.body;
+
+  const spot = await Spot.findByPk(spotId);
+
+  if (!spot) {
+    res.status(404).json({ message: "Spot couldn't be found" });
+  }
+
+  // Check if the user already has a review for the spot
+  const existingReview = await Review.findOne({
+    where: { spotId, userId },
+  });
+  if (existingReview) {
+    return res
+      .status(403)
+      .json({ message: "User already has a review for this spot" });
+  }
+
+  // Validate the request body
+  if (!review) {
+    return res
+      .status(400)
+      .json({
+        message: "Bad Request",
+        errors: { review: "Review text is required" },
+      });
+  }
+  if (!Number.isInteger(stars) || stars < 1 || stars > 5) {
+    return res
+      .status(400)
+      .json({
+        message: "Bad Request",
+        errors: { stars: "Stars must be an integer from 1 to 5" },
+      });
+  }
+
+  // Create the review
+  try {
+    const newReview = await Review.create({
+      userId,
+      spotId,
+      review,
+      stars,
+    });
+
+    res.status(201).json(newReview);
+  } catch (error) {
+    // Handle validation errors
+    if (error.name === "SequelizeValidationError") {
+      const errors = error.errors.reduce((acc, cur) => {
+        acc[cur.path] = cur.message;
+        return acc;
+      }, {});
+
+      return res.status(400).json({ message: "Validation error", errors });
+    }
+
+    // Handle other errors
+    console.error("Error creating review:", error);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 module.exports = router;
