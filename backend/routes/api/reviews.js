@@ -130,11 +130,16 @@ router.delete("/:reviewId", requireAuth, async (req, res) => {
   // Check if the review exists and belongs to the current user
   const existingReview = await Review.findOne({
     where: { id: reviewId, userId },
-    include: [{ model: ReviewImage }],
+    include: [{ model: ReviewImage, as: "ReviewImages" }],
   });
   if (!existingReview) {
     return res.status(404).json({ message: "Review couldn't be found" });
   }
+
+  // Delete the associated ReviewImage records
+  await Promise.all(
+    existingReview.ReviewImages.map((image) => image.destroy())
+  );
 
   // Delete the review
   try {
