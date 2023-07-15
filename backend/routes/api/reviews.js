@@ -96,4 +96,53 @@ router.post("/:reviewId/images", requireAuth, async (req, res) => {
   }
 });
 
+router.put("/:reviewId", requireAuth, async (req, res) => {
+  const reviewId = req.params.reviewId;
+  const userId = req.user.id;
+  const { review, stars } = req.body;
+
+  // Check if the review exists and belongs to the current user
+  const existingReview = await Review.findOne({
+    where: { id: reviewId, userId },
+  });
+  if (!existingReview) {
+    return res.status(404).json({ message: "Review couldn't be found" });
+  }
+
+  // Update the review
+  try {
+    const updatedReview = await existingReview.update({
+      review,
+      stars,
+    });
+
+    res.json(updatedReview);
+  } catch (error) {
+    console.error("Error updating review:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.delete("/:reviewId", requireAuth, async (req, res) => {
+  const reviewId = req.params.reviewId;
+  const userId = req.user.id;
+
+  // Check if the review exists and belongs to the current user
+  const existingReview = await Review.findOne({
+    where: { id: reviewId, userId },
+  });
+  if (!existingReview) {
+    return res.status(404).json({ message: "Review couldn't be found" });
+  }
+
+  // Delete the review
+  try {
+    await existingReview.destroy();
+    res.json({ message: "Successfully deleted" });
+  } catch (error) {
+    console.error("Error deleting review:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 module.exports = router;
