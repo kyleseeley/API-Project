@@ -23,21 +23,26 @@ module.exports = {
         },
         {
           spotId: 2,
+          url: "https://mlsandiegomag.com/get/files/image/galleries/9828LJFarms.jpg",
+          preview: true,
+        },
+        {
+          spotId: 3,
           url: "https://image.cnbcfm.com/api/v1/image/107127831-4001_E_Quincy_Avenue-149.jpg?v=1664790001",
           preview: true,
         },
         {
-          spotId: 2,
+          spotId: 3,
           url: "https://nypost.com/wp-content/uploads/sites/2/2022/10/denver-most-expensive-home-feat-image.jpg",
           preview: false,
         },
         {
-          spotId: 3,
+          spotId: 4,
           url: "https://images.wsj.net/im-535702/?width=1278&size=1",
           preview: true,
         },
         {
-          spotId: 3,
+          spotId: 4,
           url: "https://cdn.vox-cdn.com/thumbor/Yg8yO151MUkPkRn-jgE5iU-oNU4=/0x0:1024x767/1200x900/filters:focal(431x303:593x465):no_upscale()/cdn.vox-cdn.com/uploads/chorus_image/image/62569176/IS6257src1nr7p0000000000.0.0.jpg",
           preview: false,
         },
