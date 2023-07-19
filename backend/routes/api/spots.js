@@ -9,7 +9,7 @@ const {
   ReviewImage,
   Booking,
 } = require("../../db/models");
-const { Sequelize } = require("sequelize");
+const { Sequelize, literal } = require("sequelize");
 const { Op } = require("sequelize");
 
 const router = express.Router();
@@ -228,7 +228,8 @@ router.get("/:spotId", async (req, res) => {
   const { spotId } = req.params;
 
   try {
-    const spot = await Spot.findByPk(spotId, {
+    const spot = await Spot.findAndCountAll({
+      where: { id: spotId },
       include: [
         {
           model: SpotImage,
@@ -245,46 +246,35 @@ router.get("/:spotId", async (req, res) => {
           attributes: [],
         },
       ],
-      attributes: {
-        include: [
-          [
-            Sequelize.literal(
-              '(SELECT COUNT(*) FROM "Reviews" WHERE "Reviews"."spotId" = "Spot"."id")'
-            ),
-            "numReviews",
-          ],
-          [
-            Sequelize.literal(
-              '(SELECT AVG("stars") FROM "Reviews" WHERE "Reviews"."spotId" = "Spot"."id")'
-            ),
-            "avgStarRating",
-          ],
-        ],
-      },
     });
 
-    if (!spot) {
+    if (spot.count === 0) {
       return res.status(404).json({ message: "Spot couldn't be found" });
     }
 
+    const avgRating = await Review.findOne({
+      attributes: [[literal("AVG(stars)"), "avgStarRating"]],
+      where: { spotId },
+    });
+
     const response = {
-      id: spot.id,
-      ownerId: spot.ownerId,
-      address: spot.address,
-      city: spot.city,
-      state: spot.state,
-      country: spot.country,
-      lat: spot.lat,
-      lng: spot.lng,
-      name: spot.name,
-      description: spot.description,
-      price: spot.price,
-      createdAt: spot.createdAt,
-      updatedAt: spot.updatedAt,
-      numReviews: spot.getDataValue("numReviews"),
-      avgStarRating: spot.getDataValue("avgStarRating"),
-      SpotImages: spot.SpotImages,
-      Owner: spot.Owner,
+      id: spot.rows[0].id,
+      ownerId: spot.rows[0].ownerId,
+      address: spot.rows[0].address,
+      city: spot.rows[0].city,
+      state: spot.rows[0].state,
+      country: spot.rows[0].country,
+      lat: spot.rows[0].lat,
+      lng: spot.rows[0].lng,
+      name: spot.rows[0].name,
+      description: spot.rows[0].description,
+      price: spot.rows[0].price,
+      createdAt: spot.rows[0].createdAt,
+      updatedAt: spot.rows[0].updatedAt,
+      numReviews: spot.count,
+      avgStarRating: avgRating ? avgRating.getDataValue("avgStarRating") : null,
+      SpotImages: spot.rows[0].SpotImages,
+      Owner: spot.rows[0].Owner,
     };
 
     res.json(response);
