@@ -227,46 +227,72 @@ router.get("/current", requireAuth, async (req, res) => {
 router.get("/:spotId", async (req, res) => {
   const { spotId } = req.params;
 
-  const spot = await Spot.findByPk(spotId, {
-    include: [
-      {
-        model: SpotImage,
-        as: "SpotImages",
-        attributes: ["id", "url", "preview"],
-      },
-      {
-        model: User,
-        as: "Owner",
-        attributes: ["id", "firstName", "lastName"],
-      },
-      {
-        model: Review,
-        as: "Reviews",
-        attributes: [],
-      },
-    ],
-    attributes: {
+  try {
+    const spot = await Spot.findByPk(spotId, {
       include: [
-        [
-          Sequelize.literal(
-            '(SELECT COUNT(*) FROM "Reviews" WHERE "Reviews"."spotId" = "Spot"."id")'
-          ),
-          "numReviews",
-        ],
-        [
-          Sequelize.literal(
-            '(SELECT AVG("stars") FROM "Reviews" WHERE "Reviews"."spotId" = "Spot"."id")'
-          ),
-          "avgStarRating",
-        ],
+        {
+          model: SpotImage,
+          as: "SpotImages",
+          attributes: ["id", "url", "preview"],
+        },
+        {
+          model: User,
+          as: "Owner",
+          attributes: ["id", "firstName", "lastName"],
+        },
+        {
+          model: Review,
+          as: "Reviews",
+          attributes: [],
+        },
       ],
-    },
-    group: ["Spot.id", "SpotImages.id", "Owner.id", "Reviews.id"],
-  });
-  if (!spot) {
-    return res.status(404).json({ message: "Spot couldn't be found" });
+      attributes: {
+        include: [
+          [
+            Sequelize.literal(
+              '(SELECT COUNT(*) FROM "Reviews" WHERE "Reviews"."spotId" = "Spot"."id")'
+            ),
+            "numReviews",
+          ],
+          [
+            Sequelize.literal(
+              '(SELECT AVG("stars") FROM "Reviews" WHERE "Reviews"."spotId" = "Spot"."id")'
+            ),
+            "avgStarRating",
+          ],
+        ],
+      },
+    });
+
+    if (!spot) {
+      return res.status(404).json({ message: "Spot couldn't be found" });
+    }
+
+    const response = {
+      id: spot.id,
+      ownerId: spot.ownerId,
+      address: spot.address,
+      city: spot.city,
+      state: spot.state,
+      country: spot.country,
+      lat: spot.lat,
+      lng: spot.lng,
+      name: spot.name,
+      description: spot.description,
+      price: spot.price,
+      createdAt: spot.createdAt,
+      updatedAt: spot.updatedAt,
+      numReviews: spot.getDataValue("numReviews"),
+      avgStarRating: spot.getDataValue("avgStarRating"),
+      SpotImages: spot.SpotImages,
+      Owner: spot.Owner,
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error("Error fetching spot:", error);
+    res.status(500).json({ message: "Server Error" });
   }
-  res.json(spot);
 });
 
 router.post("/", requireAuth, async (req, res) => {
