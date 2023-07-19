@@ -14,51 +14,86 @@ const { Sequelize } = require("sequelize");
 const router = express.Router();
 
 router.get("/current", requireAuth, async (req, res) => {
-  const userId = req.user.id;
+  try {
+    const userId = req.user.id;
 
-  const allReviews = await Review.findAll({
-    where: { userId },
-    include: [
-      {
-        model: User,
-        as: "User",
-        attributes: ["id", "firstName", "lastName"],
-      },
-      {
-        model: Spot,
-        as: "Spot",
-        attributes: [
-          "id",
-          "ownerId",
-          "address",
-          "city",
-          "state",
-          "country",
-          "lat",
-          "lng",
-          "name",
-          "price",
-          [
-            Sequelize.literal(
-              '(SELECT url FROM "SpotImages" WHERE "SpotImages"."spotId" = "Spot"."id" AND "SpotImages"."preview" = true LIMIT 1)'
-            ),
-            "previewImage",
+    // Fetch reviews and related data
+    const allReviews = await Review.findAll({
+      where: { userId },
+      include: [
+        {
+          model: User,
+          as: "User",
+          attributes: ["id", "firstName", "lastName"],
+        },
+        {
+          model: Spot,
+          as: "Spot",
+          attributes: [
+            "id",
+            "ownerId",
+            "address",
+            "city",
+            "state",
+            "country",
+            "lat",
+            "lng",
+            "name",
+            "price",
           ],
-        ],
-      },
-      {
-        model: ReviewImage,
-        as: "ReviewImages",
-        attributes: ["id", "url"],
-      },
-    ],
-  });
+        },
+        {
+          model: ReviewImage,
+          as: "ReviewImages",
+          attributes: ["id", "url"],
+        },
+      ],
+    });
 
-  const response = {
-    Reviews: allReviews,
-  };
+    // Fetch SpotImages for each Spot
+    const spotImagePromises = allReviews.map(async (review) => {
+      const spotId = review.Spot.id;
+      const spotImage = await SpotImage.findOne({
+        where: { spotId, preview: true },
+        attributes: ["url"],
+      });
+      return spotImage;
+    });
 
-  res.json(response);
+    // Resolve all SpotImage promises
+    const spotImages = await Promise.all(spotImagePromises);
+
+    // Combine SpotImages with the corresponding Spot in each review
+    const formattedReviews = allReviews.map((review, index) => {
+      const formattedReview = {
+        id: review.id,
+        userId: review.userId,
+        spotId: review.spotId,
+        review: review.review,
+        stars: review.stars,
+        createdAt: review.createdAt,
+        updatedAt: review.updatedAt,
+        User: review.User,
+        Spot: {
+          ...review.Spot.toJSON(),
+          previewImage: spotImages[index]?.url || null,
+        },
+        ReviewImages: review.ReviewImages,
+      };
+      return formattedReview;
+    });
+
+    const response = {
+      Reviews: formattedReviews,
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error("Error fetching current reviews:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching current reviews" });
+  }
 });
 
 router.post("/:reviewId/images", requireAuth, async (req, res) => {
