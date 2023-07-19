@@ -14,51 +14,6 @@ const { Op } = require("sequelize");
 
 const router = express.Router();
 
-// router.get("/", async (req, res) => {
-//   const allSpots = await Spot.findAll({
-//     order: [["id"]],
-//     include: [
-//       {
-//         model: Review,
-//         attributes: [
-//           [Sequelize.fn("AVG", Sequelize.col("stars")), "avgRating"],
-//         ],
-//       },
-//       {
-//         model: SpotImage,
-//         as: "SpotImages",
-//         where: { preview: true },
-//         attributes: ["url"],
-//       },
-//     ],
-//     group: ["Spot.id"],
-//   });
-
-//   const formattedSpots = allSpots.map((spot) => ({
-//     id: spot.id,
-//     ownerId: spot.ownerId,
-//     address: spot.address,
-//     city: spot.city,
-//     state: spot.state,
-//     country: spot.country,
-//     lat: spot.lat,
-//     lng: spot.lng,
-//     name: spot.name,
-//     description: spot.description,
-//     price: spot.price,
-//     createdAt: spot.createdAt,
-//     updatedAt: spot.updatedAt,
-//     avgRating: spot.Reviews[0]?.dataValues.avgRating,
-//     previewImage: spot.SpotImages[0]?.url,
-//   }));
-
-//   const response = {
-//     Spots: formattedSpots,
-//   };
-
-//   res.json(response);
-// });
-
 router.get("/", async (req, res) => {
   const page = parseInt(req.query.page || 1);
   const size = parseInt(req.query.size || 20);
