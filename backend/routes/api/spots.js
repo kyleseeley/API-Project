@@ -196,7 +196,7 @@ router.get("/current", requireAuth, async (req, res) => {
         attributes: ["url"],
       },
     ],
-    group: ["Spot.id", "Reviews.id"],
+    group: ["Spot.id", "Reviews.id", "SpotImages.id"],
   });
 
   const formattedSpots = allSpots.map((spot) => ({
@@ -241,7 +241,6 @@ router.get("/:spotId", async (req, res) => {
       },
       {
         model: Review,
-        as: "Reviews",
         attributes: [],
       },
     ],
