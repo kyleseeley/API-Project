@@ -101,7 +101,7 @@ router.get("/", async (req, res) => {
           attributes: ["url"],
         },
       ],
-      group: ["Spot.id"],
+      group: ["Spot.id", "Reviews.id"],
     };
 
     // Query the database
