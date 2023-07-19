@@ -109,6 +109,23 @@ router.put("/:reviewId", requireAuth, async (req, res) => {
     return res.status(404).json({ message: "Review couldn't be found" });
   }
 
+  // Body validation
+  const errors = {};
+  if (!review) {
+    errors.review = "Review text is required";
+  }
+  if (!Number.isInteger(stars) || stars < 1 || stars > 5) {
+    errors.stars = "Stars must be an integer from 1 to 5";
+  }
+
+  // If there are validation errors, return the error response
+  if (Object.keys(errors).length > 0) {
+    return res.status(400).json({
+      message: "Bad Request",
+      errors,
+    });
+  }
+
   // Update the review
   try {
     const updatedReview = await existingReview.update({

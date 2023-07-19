@@ -131,7 +131,7 @@ router.get("/", async (req, res) => {
 
     // Define the base query
     const baseQuery = {
-      order: [["createdAt", "DESC"]],
+      order: [["id"]],
       include: [
         {
           model: Review,
@@ -222,162 +222,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// router.get("/", async (req, res) => {
-//   const page = parseInt(req.query.page || 1);
-//   const size = parseInt(req.query.size || 20);
-//   const minLat = parseFloat(req.query.minLat);
-//   const maxLat = parseFloat(req.query.maxLat);
-//   const minLng = parseFloat(req.query.minLng);
-//   const maxLng = parseFloat(req.query.maxLng);
-//   const minPrice = parseFloat(req.query.minPrice);
-//   const maxPrice = parseFloat(req.query.maxPrice);
-
-//   try {
-//     // Query parameters validation
-//     const validationErrors = {};
-//     if (isNaN(page) || page < 1) {
-//       validationErrors.page = "Page must be greater than or equal to 1";
-//     }
-//     if (isNaN(size) || size < 1) {
-//       validationErrors.size = "Size must be greater than or equal to 1";
-//     }
-//     if (!isNaN(minLat) && (minLat < -90 || minLat > 90)) {
-//       validationErrors.minLat = "Minimum latitude is invalid";
-//     }
-//     if (!isNaN(maxLat) && (maxLat < -90 || maxLat > 90)) {
-//       validationErrors.maxLat = "Maximum latitude is invalid";
-//     }
-//     if (!isNaN(minLng) && (minLng < -180 || minLng > 180)) {
-//       validationErrors.minLng = "Minimum longitude is invalid";
-//     }
-//     if (!isNaN(maxLng) && (maxLng < -180 || maxLng > 180)) {
-//       validationErrors.maxLng = "Maximum longitude is invalid";
-//     }
-//     if (!isNaN(minPrice) && minPrice < 0) {
-//       validationErrors.minPrice =
-//         "Minimum price must be greater than or equal to 0";
-//     }
-//     if (!isNaN(maxPrice) && maxPrice < 0) {
-//       validationErrors.maxPrice =
-//         "Maximum price must be greater than or equal to 0";
-//     }
-
-//     if (Object.keys(validationErrors).length > 0) {
-//       return res.status(400).json({
-//         message: "Bad Request",
-//         errors: validationErrors,
-//       });
-//     }
-
-//     // Build the filter object
-//     const filter = {};
-//     if (!isNaN(minLat) && !isNaN(maxLat)) {
-//       filter.lat = {
-//         [Op.between]: [minLat, maxLat],
-//       };
-//     }
-//     if (!isNaN(minLng) && !isNaN(maxLng)) {
-//       filter.lng = {
-//         [Op.between]: [minLng, maxLng],
-//       };
-//     }
-//     if (!isNaN(minPrice) && !isNaN(maxPrice)) {
-//       filter.price = {
-//         [Op.between]: [minPrice, maxPrice],
-//       };
-//     }
-
-//     // Define the base query
-//     const baseQuery = {
-//       order: [["createdAt", "DESC"]],
-//       include: [
-//         {
-//           model: Review,
-//           attributes: [
-//             [Sequelize.fn("AVG", Sequelize.col("stars")), "avgRating"],
-//           ],
-//         },
-//         {
-//           model: SpotImage,
-//           as: "SpotImages",
-//           where: { preview: true },
-//           attributes: ["url"],
-//         },
-//       ],
-//       group: ["Spot.id"],
-//     };
-
-//     // Check if filter parameters are provided
-//     if (Object.keys(filter).length === 0) {
-//       // Fetch all spots
-//       const allSpots = await Spot.findAll(baseQuery);
-
-//       // Format the response
-//       const formattedSpots = allSpots.map((spot) => ({
-//         id: spot.id,
-//         ownerId: spot.ownerId,
-//         address: spot.address,
-//         city: spot.city,
-//         state: spot.state,
-//         country: spot.country,
-//         lat: spot.lat,
-//         lng: spot.lng,
-//         name: spot.name,
-//         description: spot.description,
-//         price: spot.price,
-//         createdAt: spot.createdAt,
-//         updatedAt: spot.updatedAt,
-//         avgRating: spot.Reviews[0]?.dataValues.avgRating,
-//         previewImage: spot.SpotImages[0]?.url,
-//       }));
-
-//       const response = {
-//         Spots: formattedSpots,
-//       };
-
-//       res.json(response);
-//     } else {
-//       // Apply filter and pagination
-//       const filteredSpots = await Spot.findAll({
-//         where: filter,
-//         limit: size,
-//         offset: (page - 1) * size,
-//         ...baseQuery,
-//       });
-
-//       // Format the response
-//       const formattedSpots = filteredSpots.map((spot) => ({
-//         id: spot.id,
-//         ownerId: spot.ownerId,
-//         address: spot.address,
-//         city: spot.city,
-//         state: spot.state,
-//         country: spot.country,
-//         lat: spot.lat,
-//         lng: spot.lng,
-//         name: spot.name,
-//         description: spot.description,
-//         price: spot.price,
-//         createdAt: spot.createdAt,
-//         updatedAt: spot.updatedAt,
-//         avgRating: spot.Reviews[0]?.dataValues.avgRating || null,
-//         previewImage: spot.SpotImages[0]?.url || null,
-//       }));
-
-//       const response = {
-//         Spots: formattedSpots,
-//         page,
-//         size,
-//       };
-
-//       res.json(response);
-//     }
-//   } catch (error) {
-//     console.error("Error fetching spots:", error);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// });
-
 router.get("/current", requireAuth, async (req, res) => {
   const userId = req.user.id;
   const allSpots = await Spot.findAll({
@@ -418,7 +262,11 @@ router.get("/current", requireAuth, async (req, res) => {
     previewImage: spot.SpotImages[0]?.url,
   }));
 
-  res.json(formattedSpots);
+  const response = {
+    Spots: formattedSpots,
+  };
+
+  res.json(response);
 });
 
 router.get("/:spotId", async (req, res) => {
@@ -485,10 +333,10 @@ router.post("/", requireAuth, async (req, res) => {
   if (!country) {
     errors.country = "Country is required";
   }
-  if (isNaN(parseFloat(lat))) {
+  if (isNaN(parseFloat(lat)) || lat < -90 || lat > 90) {
     errors.lat = "Latitude is not valid";
   }
-  if (isNaN(parseFloat(lng))) {
+  if (isNaN(parseFloat(lng)) || lng < -180 || lng > 180) {
     errors.lng = "Longitude is not valid";
   }
   if (!name || name.length > 49) {
@@ -530,11 +378,16 @@ router.post("/:spotId/images", requireAuth, async (req, res) => {
   const ownerId = req.user.id;
 
   const spot = await Spot.findOne({
-    where: { id: spotId, ownerId },
+    where: { id: spotId },
   });
 
   if (!spot) {
     res.status(404).json({ message: "Spot couldn't be found" });
+  }
+
+  if (spot.ownerId !== req.user.id) {
+    // Current user doesn't have access to the spot
+    return res.status(403).json({ message: "Forbidden" });
   }
 
   const newImage = await SpotImage.create({
@@ -569,10 +422,10 @@ router.put("/:spotId", requireAuth, async (req, res) => {
   if (!country) {
     errors.country = "Country is required";
   }
-  if (isNaN(parseFloat(lat))) {
+  if (isNaN(parseFloat(lat)) || lat < -90 || lat > 90) {
     errors.lat = "Latitude is not valid";
   }
-  if (isNaN(parseFloat(lng))) {
+  if (isNaN(parseFloat(lng)) || lng < -180 || lng > 180) {
     errors.lng = "Longitude is not valid";
   }
   if (!name || name.length > 49) {
@@ -594,11 +447,16 @@ router.put("/:spotId", requireAuth, async (req, res) => {
   }
 
   const spot = await Spot.findOne({
-    where: { id: spotId, ownerId },
+    where: { id: spotId },
   });
 
   if (!spot) {
     res.status(404).json({ message: "Spot couldn't be found" });
+  }
+
+  if (spot.ownerId !== req.user.id) {
+    // Current user doesn't have access to the spot
+    return res.status(403).json({ message: "Forbidden" });
   }
 
   spot.address = address;
@@ -620,12 +478,17 @@ router.delete("/:spotId", requireAuth, async (req, res) => {
   const ownerId = req.user.id;
 
   const spot = await Spot.findOne({
-    where: { id: spotId, ownerId },
-    include: [{ model: SpotImage }],
+    where: { id: spotId },
+    include: [{ model: SpotImage, as: "SpotImages" }],
   });
 
   if (!spot) {
     res.status(404).json({ message: "Spot couldn't be found" });
+  }
+
+  if (spot.ownerId !== req.user.id) {
+    // Current user doesn't have access to the spot
+    return res.status(403).json({ message: "Forbidden" });
   }
 
   await Promise.all(spot.SpotImages.map((image) => image.destroy()));
@@ -736,6 +599,7 @@ router.get("/:spotId/bookings", requireAuth, async (req, res) => {
   }
 
   let bookings;
+  let response;
 
   if (spot.ownerId === userId) {
     // If the user is the owner of the spot, include user details in the response
@@ -746,37 +610,48 @@ router.get("/:spotId/bookings", requireAuth, async (req, res) => {
         attributes: ["id", "firstName", "lastName"],
       },
     });
+    response = {
+      Bookings: bookings.map((booking) => {
+        const formattedBooking = booking.toJSON();
+        const user = formattedBooking.User
+          ? {
+              id: formattedBooking.User.id,
+              firstName: formattedBooking.User.firstName,
+              lastName: formattedBooking.User.lastName,
+            }
+          : null;
+        delete formattedBooking.User;
+
+        const startDate = booking.startDate.toISOString().substring(0, 10);
+        const endDate = booking.endDate.toISOString().substring(0, 10);
+        return {
+          User: user,
+          ...formattedBooking,
+          startDate,
+          endDate,
+        };
+      }),
+    };
   } else {
     // If the user is not the owner of the spot, only include booking details in the response
     bookings = await Booking.findAll({
       where: { spotId },
       attributes: ["spotId", "startDate", "endDate"],
     });
+    response = {
+      Bookings: bookings.map((booking) => {
+        const formattedBooking = booking.toJSON();
+
+        const startDate = booking.startDate.toISOString().substring(0, 10);
+        const endDate = booking.endDate.toISOString().substring(0, 10);
+        return {
+          ...formattedBooking,
+          startDate,
+          endDate,
+        };
+      }),
+    };
   }
-
-  const response = {
-    Bookings: bookings.map((booking) => {
-      const formattedBooking = booking.toJSON();
-      const user = formattedBooking.User
-        ? {
-            id: formattedBooking.User.id,
-            firstName: formattedBooking.User.firstName,
-            lastName: formattedBooking.User.lastName,
-          }
-        : null;
-      delete formattedBooking.User;
-
-      const startDate = booking.startDate.toISOString().substring(0, 10);
-      const endDate = booking.endDate.toISOString().substring(0, 10);
-      return {
-        User: user,
-        ...formattedBooking,
-        startDate,
-        endDate,
-      };
-    }),
-  };
-
   res.json(response);
 });
 
@@ -805,6 +680,17 @@ router.post("/:spotId/bookings", requireAuth, async (req, res) => {
         message: "Bad Request",
         errors: {
           endDate: "endDate cannot be on or before startDate",
+        },
+      });
+    }
+
+    // Check if startDate is in the past
+    const currentDate = new Date().toISOString().substring(0, 10);
+    if (startDate < currentDate) {
+      return res.status(400).json({
+        message: "Bad Request",
+        errors: {
+          startDate: "Start date cannot be in the past",
         },
       });
     }

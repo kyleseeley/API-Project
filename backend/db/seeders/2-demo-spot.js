@@ -25,6 +25,18 @@ module.exports = {
           price: 123,
         },
         {
+          ownerId: 1,
+          address: "999 Ocean View Circle",
+          city: "San Diego",
+          state: "California",
+          country: "United States of America",
+          lat: 32.7157,
+          lng: -117.1611,
+          name: "Waves Crashing",
+          description: "Sleep peacefully",
+          price: 712,
+        },
+        {
           ownerId: 2,
           address: "456 Comic Street",
           city: "Denver",

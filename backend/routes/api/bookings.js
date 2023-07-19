@@ -108,7 +108,7 @@ router.put("/:bookingId", requireAuth, async (req, res) => {
     // Check if the booking belongs to the current user
     if (booking.userId !== userId) {
       return res.status(403).json({
-        message: "You are not authorized to edit this booking",
+        message: "Forbidden",
       });
     }
 
@@ -214,7 +214,7 @@ router.delete("/:bookingId", requireAuth, async (req, res) => {
 
     // Check if the booking belongs to the current user or the spot belongs to the current user
     const spot = await Spot.findByPk(booking.spotId);
-    if (booking.userId !== userId && spot.ownerId !== userId) {
+    if (!(booking.userId === userId || spot.ownerId === userId)) {
       return res.status(403).json({
         message: "You are not authorized to delete this booking",
       });
