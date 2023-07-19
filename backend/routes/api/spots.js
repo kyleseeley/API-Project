@@ -196,7 +196,7 @@ router.get("/current", requireAuth, async (req, res) => {
         attributes: ["url"],
       },
     ],
-    group: ["Spot.id"],
+    group: ["Spot.id", "Reviews.id"],
   });
 
   const formattedSpots = allSpots.map((spot) => ({
@@ -249,13 +249,13 @@ router.get("/:spotId", async (req, res) => {
       include: [
         [
           Sequelize.literal(
-            "(SELECT COUNT(*) FROM `Reviews` WHERE `Reviews`.`spotId` = `Spot`.`id`)"
+            '(SELECT COUNT(*) FROM "Reviews" WHERE "Reviews"."spotId" = "Spot"."id")'
           ),
           "numReviews",
         ],
         [
           Sequelize.literal(
-            "(SELECT AVG(`stars`) FROM `Reviews` WHERE `Reviews`.`spotId` = `Spot`.`id`)"
+            '(SELECT AVG("stars") FROM "Reviews" WHERE "Reviews"."spotId" = "Spot"."id")'
           ),
           "avgStarRating",
         ],

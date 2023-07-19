@@ -40,7 +40,7 @@ router.get("/current", requireAuth, async (req, res) => {
           "price",
           [
             Sequelize.literal(
-              `(SELECT url FROM SpotImages WHERE SpotImages.spotId = Spot.id AND SpotImages.preview = true LIMIT 1)`
+              '(SELECT url FROM "SpotImages" WHERE "SpotImages"."spotId" = "Spot"."id" AND "SpotImages"."preview" = true LIMIT 1)'
             ),
             "previewImage",
           ],
