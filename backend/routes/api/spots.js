@@ -215,6 +215,7 @@ router.get("/current", requireAuth, async (req, res) => {
         "Spot.price",
         "Spot.createdAt",
         "Spot.updatedAt",
+        "Reviews.spotId",
       ],
     });
 
