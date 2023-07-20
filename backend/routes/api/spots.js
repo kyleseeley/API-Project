@@ -279,9 +279,10 @@ router.get("/:spotId", async (req, res) => {
       createdAt: spot.rows[0].createdAt,
       updatedAt: spot.rows[0].updatedAt,
       numReviews: spot.count,
-      avgStarRating: avgRating
-        ? parseFloat(avgRating.avgStarRating.toFixed(1))
-        : null,
+      avgStarRating:
+        avgRating && avgRating.avgRating !== null
+          ? parseFloat(avgRating.avgRating.toFixed(1))
+          : null,
       SpotImages: spot.rows[0].SpotImages,
       Owner: spot.rows[0].Owner,
     };
