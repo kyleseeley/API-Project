@@ -187,7 +187,7 @@ router.get("/current", requireAuth, async (req, res) => {
   try {
     const userSpots = await Spot.findAll({
       where: { ownerId: userId },
-      order: [["createdAt", "DESC"]],
+      order: [["id", "ASC"]],
       include: [
         {
           model: Review,
