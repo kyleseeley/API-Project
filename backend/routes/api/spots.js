@@ -89,6 +89,37 @@ router.get("/", async (req, res) => {
     const allSpots = await Spot.findAll({
       where: filter,
       order: [["id"]],
+      include: [
+        {
+          model: Review,
+          attributes: [
+            [Sequelize.fn("AVG", Sequelize.col("stars")), "avgRating"],
+          ],
+        },
+        {
+          model: SpotImage,
+          as: "SpotImages",
+          where: { preview: true },
+          attributes: ["id", "url"],
+        },
+      ],
+      group: [
+        "Spot.id",
+        "Spot.ownerId",
+        "Spot.address",
+        "Spot.city",
+        "Spot.state",
+        "Spot.country",
+        "Spot.lat",
+        "Spot.lng",
+        "Spot.name",
+        "Spot.description",
+        "Spot.price",
+        "Spot.createdAt",
+        "Spot.updatedAt",
+        "SpotImages.id",
+        "SpotImages.url",
+      ],
     });
 
     // Get all spot IDs
