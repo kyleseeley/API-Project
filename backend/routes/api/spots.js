@@ -185,8 +185,6 @@ router.get("/current", requireAuth, async (req, res) => {
   const userId = req.user.id;
 
   try {
-    // Query the database to fetch all spots associated with the current user
-    // Fetch spots of the current user
     const userSpots = await Spot.findAll({
       where: { ownerId: userId },
       order: [["createdAt", "DESC"]],
@@ -219,7 +217,7 @@ router.get("/current", requireAuth, async (req, res) => {
       ],
     });
 
-    // Fetch associated reviews for all spots owned by the user using LEFT OUTER JOIN
+    // Fetch associated reviews for all spots owned by the user
     const reviews = await Review.findAll({
       attributes: [
         "spotId",
@@ -227,20 +225,7 @@ router.get("/current", requireAuth, async (req, res) => {
       ],
       where: { spotId: userSpots.map((spot) => spot.id) },
       group: [
-        "spotId",
-        "Spot.id", // Include Spot.id in the GROUP BY clause
-        "Spot.ownerId", // Include Spot.ownerId in the GROUP BY clause
-        "Spot.address", // Include Spot.address in the GROUP BY clause
-        "Spot.city", // Include Spot.city in the GROUP BY clause
-        "Spot.state", // Include Spot.state in the GROUP BY clause
-        "Spot.country", // Include Spot.country in the GROUP BY clause
-        "Spot.lat", // Include Spot.lat in the GROUP BY clause
-        "Spot.lng", // Include Spot.lng in the GROUP BY clause
-        "Spot.name", // Include Spot.name in the GROUP BY clause
-        "Spot.description", // Include Spot.description in the GROUP BY clause
-        "Spot.price", // Include Spot.price in the GROUP BY clause
-        "Spot.createdAt", // Include Spot.createdAt in the GROUP BY clause
-        "Spot.updatedAt", // Include Spot.updatedAt in the GROUP BY clause
+        "spotId", // Change 'Reviews.spotId' to 'spotId'
       ],
       raw: true,
       nested: true,
@@ -274,14 +259,14 @@ router.get("/current", requireAuth, async (req, res) => {
       };
 
       // Find the corresponding review for the spot, if it exists
-      const spotReview = reviews.find((review) => review.spotId === spot.id);
-      if (spotReview) {
-        formattedSpot.avgRating = parseFloat(
-          spotReview.avgRating ? spotReview.avgRating.toFixed(1) : null
-        );
-      } else {
-        formattedSpot.avgRating = null;
-      }
+      const spotReview = reviews.find(
+        (review) => review.spotId === spot.spotId
+      );
+      formattedSpot.avgRating = spotReview
+        ? parseFloat(
+            spotReview.avgRating ? spotReview.avgRating.toFixed(1) : null
+          )
+        : null;
 
       // Find the corresponding spot image for the spot, if it exists
       const spotImage = spotImages.find((image) => image.spotId === spot.id);
