@@ -132,7 +132,9 @@ router.get("/", async (req, res) => {
 
       // Find the corresponding review for the spot, if it exists
       const review = reviews.find((review) => review.spotId === spot.id);
-      formattedSpot.avgRating = review ? review.dataValues.avgRating : null;
+      formattedSpot.avgRating = review
+        ? review.dataValues.avgRating.toFixed(1)
+        : null;
 
       // Find the corresponding spot image for the spot, if it exists
       const spotImage = spotImages.find((image) => image.spotId === spot.id);
@@ -209,7 +211,9 @@ router.get("/current", requireAuth, async (req, res) => {
         price: spot.price,
         createdAt: spot.createdAt,
         updatedAt: spot.updatedAt,
-        avgRating: spotReview ? spotReview.dataValues.avgRating : null,
+        avgRating: spotReview
+          ? spotReview.dataValues.avgRating.toFixed(1)
+          : null,
         previewImage: spotImage ? spotImage.url : null,
       };
     });
