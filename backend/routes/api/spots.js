@@ -198,8 +198,22 @@ router.get("/current", requireAuth, async (req, res) => {
             "spotId",
             [Sequelize.fn("AVG", Sequelize.col("stars")), "avgRating"],
           ],
-          group: ["spotId"],
         },
+      ],
+      group: [
+        "Spot.id",
+        "Spot.ownerId",
+        "Spot.address",
+        "Spot.city",
+        "Spot.state",
+        "Spot.country",
+        "Spot.lat",
+        "Spot.lng",
+        "Spot.name",
+        "Spot.description",
+        "Spot.price",
+        "Spot.createdAt",
+        "Spot.updatedAt",
       ],
     });
 
