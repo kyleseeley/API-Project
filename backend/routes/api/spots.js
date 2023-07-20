@@ -86,13 +86,6 @@ router.get("/", async (req, res) => {
     }
 
     // Query the database to fetch all spots based on the filter
-    // const allSpots = await Spot.findAndCountAll({
-    //   where: filter,
-    //   order: [["id"]],
-    //   limit: size,
-    //   offset: (page - 1) * size,
-    // });
-
     const allSpots = await Spot.findAndCountAll({
       where: filter,
       order: [["id"]],
@@ -157,16 +150,10 @@ router.get("/", async (req, res) => {
       };
 
       // Find the corresponding review for the spot, if it exists
-      // const spotReview = reviews.find((review) => review.spotId === spot.id);
-      // if (spotReview && typeof spotReview.avgRating === "number") {
-      //   formattedSpot.avgRating = parseFloat(spotReview.avgRating.toFixed(1));
-      // } else {
-      //   formattedSpot.avgRating = null;
-      // }
       const spotReview = reviews.find((review) => review.spotId === spot.id);
 
       if (spotReview && typeof spotReview.avgRating === "number") {
-        formattedSpot.avgRating = parseFloat(spotReview.avgRating);
+        formattedSpot.avgRating = Math.round(spotReview.avgRating * 10) / 10;
       } else {
         formattedSpot.avgRating = null;
       }
