@@ -284,10 +284,11 @@ router.get("/:spotId", async (req, res) => {
       numReviews: spot.count,
       avgStarRating:
         avgRating && avgRating.getDataValue("avgStarRating") !== null
-          ? parseFloat(avgRating.getDataValue("avgStarRating").toFixed(1))
+          ? parseFloat(avgRating.getDataValue("avgStarRating").toFixed(1)) ||
+            null
           : null,
       SpotImages: spot.rows[0].SpotImages,
-      Owner: spot.rows[0].Owners, // Update this to "Owners" instead of "Owner"
+      Owner: spot.rows[0].Owners,
     };
 
     res.json(response);
