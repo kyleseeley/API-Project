@@ -257,9 +257,7 @@ router.get("/current", requireAuth, async (req, res) => {
       };
 
       // Find the corresponding review for the spot, if it exists
-      const spotReview = reviews.find(
-        (review) => review.spotId === spot.spotId
-      );
+      const spotReview = reviews.find((review) => review.spotId === spot.id);
       formattedSpot.avgRating = spotReview
         ? parseFloat(
             spotReview.avgRating ? spotReview.avgRating.toFixed(1) : null
