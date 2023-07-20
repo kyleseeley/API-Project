@@ -192,10 +192,7 @@ router.get("/current", requireAuth, async (req, res) => {
         {
           model: Review,
           as: "Reviews",
-          attributes: [
-            "spotId",
-            [Sequelize.fn("AVG", Sequelize.col("stars")), "avgRating"],
-          ],
+          attributes: [],
         },
       ],
       raw: true,
@@ -213,21 +210,26 @@ router.get("/current", requireAuth, async (req, res) => {
         "Spot.price",
         "Spot.createdAt",
         "Spot.updatedAt",
-        "Reviews.spotId",
       ],
     });
 
-    // Fetch associated reviews for all spots owned by the user
-    const reviews = await Review.findAll({
+    // Fetch the average rating for all spots owned by the user
+    const avgRatings = await Review.findAll({
       attributes: [
         "spotId",
         [Sequelize.fn("AVG", Sequelize.col("stars")), "avgRating"],
       ],
       where: { spotId: userSpots.map((spot) => spot.id) },
-      group: ["spotId", "Spot.id"],
+      group: ["spotId"],
       raw: true,
-      nested: true,
-      include: [{ model: Spot, as: "Spot" }],
+    });
+
+    // Convert the avgRatings array into an object for easy lookup
+    const avgRatingsObj = {};
+    avgRatings.forEach((rating) => {
+      avgRatingsObj[rating.spotId] = parseFloat(
+        rating.avgRating ? rating.avgRating.toFixed(1) : null
+      );
     });
 
     // Fetch associated spot images for all spots owned by the user
@@ -236,6 +238,12 @@ router.get("/current", requireAuth, async (req, res) => {
         spotId: userSpots.map((spot) => spot.id),
         preview: true,
       },
+    });
+
+    // Convert the spotImages array into an object for easy lookup
+    const spotImagesObj = {};
+    spotImages.forEach((image) => {
+      spotImagesObj[image.spotId] = image.url;
     });
 
     // Format the response
@@ -254,19 +262,9 @@ router.get("/current", requireAuth, async (req, res) => {
         price: spot.price,
         createdAt: spot.createdAt,
         updatedAt: spot.updatedAt,
+        avgRating: avgRatingsObj[spot.id], // Lookup the average rating for this spot
+        previewImage: spotImagesObj[spot.id] || null, // Lookup the preview image URL for this spot
       };
-
-      // Find the corresponding review for the spot, if it exists
-      const spotReview = reviews.find((review) => review.spotId === spot.id);
-      formattedSpot.avgRating = spotReview
-        ? parseFloat(
-            spotReview.avgRating ? spotReview.avgRating.toFixed(1) : null
-          )
-        : null;
-
-      // Find the corresponding spot image for the spot, if it exists
-      const spotImage = spotImages.find((image) => image.spotId === spot.id);
-      formattedSpot.previewImage = spotImage ? spotImage.url : null;
 
       return formattedSpot;
     });
