@@ -242,7 +242,7 @@ router.get("/current", requireAuth, async (req, res) => {
       // Validate and set the average rating
       let avgRating = null;
       if (avgRatingObj && typeof avgRatingObj.avgRating === "number") {
-        avgRating = parseFloat(avgRatingObj.avgRating.toFixed(1));
+        avgRating = Math.round(avgRatingObj.avgRating * 10) / 10;
       }
 
       const formattedSpot = {
