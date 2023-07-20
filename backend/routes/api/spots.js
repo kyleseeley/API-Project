@@ -213,7 +213,7 @@ router.get("/current", requireAuth, async (req, res) => {
       ],
     });
 
-    // Fetch the average ratings for all spots owned by the user
+    // Fetch the average rating for all spots owned by the user
     const avgRatings = await Review.findAll({
       attributes: [
         "spotId",
@@ -224,7 +224,13 @@ router.get("/current", requireAuth, async (req, res) => {
       raw: true,
     });
 
-    console.log("avgRatings:", avgRatings);
+    // Convert the avgRatings array into an object for easy lookup
+    const avgRatingsObj = {};
+    avgRatings.forEach((rating) => {
+      avgRatingsObj[rating.spotId] = parseFloat(
+        rating.avgRating !== null ? rating.avgRating.toFixed(1) : null
+      );
+    });
 
     // Fetch associated spot images for all spots owned by the user
     const spotImages = await SpotImage.findAll({
@@ -234,19 +240,14 @@ router.get("/current", requireAuth, async (req, res) => {
       },
     });
 
+    // Convert the spotImages array into an object for easy lookup
+    const spotImagesObj = {};
+    spotImages.forEach((image) => {
+      spotImagesObj[image.spotId] = image.url;
+    });
+
     // Format the response
     const formattedSpots = userSpots.map((spot) => {
-      // Find the average rating for the spot
-      const avgRatingObj = avgRatings.find(
-        (rating) => rating.spotId === spot.id
-      );
-
-      // Validate and set the average rating
-      let avgRating = null;
-      if (avgRatingObj && typeof avgRatingObj.avgRating === "number") {
-        avgRating = Math.round(avgRatingObj.avgRating * 10) / 10;
-      }
-
       const formattedSpot = {
         id: spot.id,
         ownerId: spot.ownerId,
@@ -261,13 +262,9 @@ router.get("/current", requireAuth, async (req, res) => {
         price: spot.price,
         createdAt: spot.createdAt,
         updatedAt: spot.updatedAt,
-        avgRating,
-        previewImage: null,
+        avgRating: avgRatingsObj[spot.id] || null,
+        previewImage: spotImagesObj[spot.id] || null,
       };
-
-      // Find the corresponding spot image for the spot
-      const spotImage = spotImages.find((image) => image.spotId === spot.id);
-      formattedSpot.previewImage = spotImage ? spotImage.url : null;
 
       return formattedSpot;
     });
