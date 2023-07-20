@@ -117,6 +117,7 @@ router.get("/", async (req, res) => {
         "Spot.price",
         "Spot.createdAt",
         "Spot.updatedAt",
+        "Reviews.id",
         "SpotImages.id",
         "SpotImages.url",
       ],
