@@ -153,6 +153,7 @@ router.get("/", async (req, res) => {
       const spotReview = reviews.find((review) => review.spotId === spot.id);
 
       if (spotReview && typeof spotReview.avgRating === "number") {
+        console.log("spotReview.avgRating:", spotReview.avgRating);
         formattedSpot.avgRating = Math.round(spotReview.avgRating * 10) / 10;
       } else {
         formattedSpot.avgRating = null;
