@@ -239,6 +239,12 @@ router.get("/current", requireAuth, async (req, res) => {
         (rating) => rating.spotId === spot.id
       );
 
+      // Validate and set the average rating
+      let avgRating = null;
+      if (avgRatingObj && typeof avgRatingObj.avgRating === "number") {
+        avgRating = parseFloat(avgRatingObj.avgRating.toFixed(1));
+      }
+
       const formattedSpot = {
         id: spot.id,
         ownerId: spot.ownerId,
@@ -253,9 +259,7 @@ router.get("/current", requireAuth, async (req, res) => {
         price: spot.price,
         createdAt: spot.createdAt,
         updatedAt: spot.updatedAt,
-        avgRating: avgRatingObj
-          ? parseFloat(avgRatingObj.avgRating.toFixed(1))
-          : null,
+        avgRating,
         previewImage: null,
       };
 
