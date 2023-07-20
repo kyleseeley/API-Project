@@ -149,8 +149,6 @@ router.get("/", async (req, res) => {
         updatedAt: spot.updatedAt,
       };
 
-      console.log("formattedSpots:", formattedSpots);
-
       // Find the corresponding review for the spot, if it exists
       const spotReview = reviews.find((review) => review.spotId === spot.id);
 
@@ -169,6 +167,8 @@ router.get("/", async (req, res) => {
 
       return formattedSpot;
     });
+
+    console.log("formattedSpots:", formattedSpots);
 
     // Prepare the response object
     const response = { Spots: formattedSpots };
