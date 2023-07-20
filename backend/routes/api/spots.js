@@ -102,6 +102,9 @@ router.get("/", async (req, res) => {
       ],
       where: { spotId: spotIds },
       group: ["spotId"],
+      raw: true,
+      nested: true,
+      include: [{ model: Spot, as: "Spot" }],
     });
 
     // Fetch associated spot images for all spots
@@ -132,9 +135,9 @@ router.get("/", async (req, res) => {
 
       // Find the corresponding review for the spot, if it exists
       const spotReview = reviews.find((review) => review.spotId === spot.id);
-      if (spotReview && typeof spotReview.dataValues.avgRating === "number") {
+      if (spotReview) {
         formattedSpot.avgRating = parseFloat(
-          spotReview.dataValues.avgRating.toFixed(1)
+          spotReview.avgRating ? spotReview.avgRating.toFixed(1) : null
         );
       } else {
         formattedSpot.avgRating = null;
@@ -246,7 +249,7 @@ router.get("/:spotId", async (req, res) => {
         },
         {
           model: User,
-          as: "Owners", // Update this to "Owners" instead of "Owner"
+          as: "Owners",
           attributes: ["id", "firstName", "lastName"],
         },
         {
@@ -262,7 +265,7 @@ router.get("/:spotId", async (req, res) => {
 
     const avgRating = await Review.findOne({
       attributes: [
-        [Sequelize.fn("AVG", Sequelize.col("stars")), "avgStarRating"],
+        [Sequelize.literal("ROUND(AVG(stars), 1)"), "avgStarRating"],
       ],
       where: { spotId },
     });
@@ -282,11 +285,7 @@ router.get("/:spotId", async (req, res) => {
       createdAt: spot.rows[0].createdAt,
       updatedAt: spot.rows[0].updatedAt,
       numReviews: spot.count,
-      avgStarRating:
-        avgRating && avgRating.getDataValue("avgStarRating") !== null
-          ? parseFloat(avgRating.getDataValue("avgStarRating").toFixed(1)) ||
-            null
-          : null,
+      avgStarRating: avgRating && avgRating.getDataValue("avgStarRating"),
       SpotImages: spot.rows[0].SpotImages,
       Owner: spot.rows[0].Owners,
     };
