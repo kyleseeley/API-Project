@@ -188,7 +188,7 @@ router.get("/current", requireAuth, async (req, res) => {
     // Query the database to fetch all spots associated with the current user
     // Fetch spots of the current user
     const userSpots = await Spot.findAll({
-      where: { ownerId: userId }, // Use userId instead of currentUserId
+      where: { ownerId: userId },
       order: [["createdAt", "DESC"]],
       include: [
         {
@@ -200,6 +200,7 @@ router.get("/current", requireAuth, async (req, res) => {
           ],
         },
       ],
+      raw: true,
       group: [
         "Spot.id",
         "Spot.ownerId",
