@@ -150,10 +150,8 @@ router.get("/", async (req, res) => {
 
       // Find the corresponding review for the spot, if it exists
       const spotReview = reviews.find((review) => review.spotId === spot.id);
-      if (spotReview) {
-        formattedSpot.avgRating = parseFloat(
-          spotReview.avgRating ? spotReview.avgRating.toFixed(1) : null
-        );
+      if (spotReview && typeof spotReview.avgRating === "number") {
+        formattedSpot.avgRating = parseFloat(spotReview.avgRating.toFixed(1));
       } else {
         formattedSpot.avgRating = null;
       }
@@ -188,9 +186,21 @@ router.get("/current", requireAuth, async (req, res) => {
 
   try {
     // Query the database to fetch all spots associated with the current user
+    // Fetch spots of the current user
     const userSpots = await Spot.findAll({
-      where: { ownerId: userId },
-      order: [["id"]],
+      where: { ownerId: userId }, // Use userId instead of currentUserId
+      order: [["createdAt", "DESC"]],
+      include: [
+        {
+          model: Review,
+          as: "Reviews",
+          attributes: [
+            "spotId",
+            [Sequelize.fn("AVG", Sequelize.col("stars")), "avgRating"],
+          ],
+          group: ["spotId"],
+        },
+      ],
     });
 
     // Fetch associated reviews for all spots owned by the user using LEFT OUTER JOIN
