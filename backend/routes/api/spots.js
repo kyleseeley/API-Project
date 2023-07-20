@@ -118,7 +118,7 @@ router.get("/", async (req, res) => {
         "spotId",
         [Sequelize.fn("AVG", Sequelize.col("stars")), "avgRating"],
       ],
-      where: { spotId: allSpots.rows.map((spot) => spot.id) },
+      where: { spotId: spotIds },
       group: ["spotId"],
       raw: true,
     });
@@ -167,14 +167,6 @@ router.get("/", async (req, res) => {
 
       return formattedSpot;
     });
-
-    const reviewsForSpots = await Review.findAll({
-      where: {
-        spotId: spotIds,
-      },
-    });
-    console.log("reviewsForSpots:", reviewsForSpots);
-    console.log("formattedSpots:", formattedSpots);
 
     // Prepare the response object
     const response = { Spots: formattedSpots };
