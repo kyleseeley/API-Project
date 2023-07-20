@@ -235,12 +235,9 @@ router.get("/current", requireAuth, async (req, res) => {
     // Format the response
     const formattedSpots = userSpots.map((spot) => {
       // Find the average rating for the spot
-      const avgRating = avgRatings.find(
+      const avgRatingObj = avgRatings.find(
         (rating) => rating.spotId === spot.id
-      )?.avgRating;
-
-      // Find the corresponding spot image for the spot
-      const spotImage = spotImages.find((image) => image.spotId === spot.id);
+      );
 
       const formattedSpot = {
         id: spot.id,
@@ -256,9 +253,15 @@ router.get("/current", requireAuth, async (req, res) => {
         price: spot.price,
         createdAt: spot.createdAt,
         updatedAt: spot.updatedAt,
-        avgRating: avgRating ? parseFloat(avgRating.toFixed(1)) : null,
-        previewImage: spotImage ? spotImage.url : null,
+        avgRating: avgRatingObj
+          ? parseFloat(avgRatingObj.avgRating.toFixed(1))
+          : null,
+        previewImage: null,
       };
+
+      // Find the corresponding spot image for the spot
+      const spotImage = spotImages.find((image) => image.spotId === spot.id);
+      formattedSpot.previewImage = spotImage ? spotImage.url : null;
 
       return formattedSpot;
     });
