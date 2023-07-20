@@ -131,10 +131,14 @@ router.get("/", async (req, res) => {
       };
 
       // Find the corresponding review for the spot, if it exists
-      const review = reviews.find((review) => review.spotId === spot.id);
-      formattedSpot.avgRating = review
-        ? review.dataValues.avgRating.toFixed(1)
-        : null;
+      const spotReview = reviews.find((review) => review.spotId === spot.id);
+      if (spotReview && spotReview.dataValues.avgRating !== null) {
+        formattedSpot.avgRating = parseFloat(
+          spotReview.dataValues.avgRating.toFixed(1)
+        );
+      } else {
+        formattedSpot.avgRating = null;
+      }
 
       // Find the corresponding spot image for the spot, if it exists
       const spotImage = spotImages.find((image) => image.spotId === spot.id);
@@ -211,9 +215,10 @@ router.get("/current", requireAuth, async (req, res) => {
         price: spot.price,
         createdAt: spot.createdAt,
         updatedAt: spot.updatedAt,
-        avgRating: spotReview
-          ? spotReview.dataValues.avgRating.toFixed(1)
-          : null,
+        avgRating:
+          spotReview && spotReview.dataValues.avgRating !== null
+            ? parseFloat(spotReview.dataValues.avgRating.toFixed(1))
+            : null,
         previewImage: spotImage ? spotImage.url : null,
       };
     });
@@ -275,7 +280,10 @@ router.get("/:spotId", async (req, res) => {
       createdAt: spot.rows[0].createdAt,
       updatedAt: spot.rows[0].updatedAt,
       numReviews: spot.count,
-      avgStarRating: avgRating ? avgRating.getDataValue("avgStarRating") : null,
+      avgStarRating:
+        avgRating && avgRating.getDataValue("avgStarRating") !== null
+          ? parseFloat(avgRating.getDataValue("avgStarRating").toFixed(1))
+          : null,
       SpotImages: spot.rows[0].SpotImages,
       Owner: spot.rows[0].Owner,
     };
