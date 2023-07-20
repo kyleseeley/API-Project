@@ -101,7 +101,22 @@ router.get("/", async (req, res) => {
         [Sequelize.fn("AVG", Sequelize.col("stars")), "avgRating"],
       ],
       where: { spotId: spotIds },
-      group: ["spotId"],
+      group: [
+        "spotId",
+        "Spot.id",
+        "Spot.ownerId",
+        "Spot.address",
+        "Spot.city",
+        "Spot.state",
+        "Spot.country",
+        "Spot.lat",
+        "Spot.lng",
+        "Spot.name",
+        "Spot.description",
+        "Spot.price",
+        "Spot.createdAt",
+        "Spot.updatedAt",
+      ],
       raw: true,
       nested: true,
       include: [{ model: Spot, as: "Spot" }],
@@ -170,41 +185,38 @@ router.get("/", async (req, res) => {
 
 router.get("/current", requireAuth, async (req, res) => {
   const userId = req.user.id;
+
   try {
     // Query the database to fetch all spots associated with the current user
     const userSpots = await Spot.findAll({
-      where: { ownerId: userId }, // Filter spots by the current user's id
+      where: { ownerId: userId },
       order: [["id"]],
     });
 
-    // Fetch reviews related to user spots
-    const spotIds = userSpots.map((spot) => spot.id);
-    const spotReviews = await Review.findAll({
-      where: { spotId: spotIds },
+    // Fetch associated reviews for all spots owned by the user using LEFT OUTER JOIN
+    const reviews = await Review.findAll({
       attributes: [
         "spotId",
         [Sequelize.fn("AVG", Sequelize.col("stars")), "avgRating"],
       ],
+      where: { spotId: userSpots.map((spot) => spot.id) },
       group: ["spotId"],
+      raw: true,
+      nested: true,
+      include: [{ model: Spot, as: "Spot" }],
     });
 
-    // Fetch spot images related to user spots
+    // Fetch associated spot images for all spots owned by the user
     const spotImages = await SpotImage.findAll({
       where: {
-        spotId: spotIds,
+        spotId: userSpots.map((spot) => spot.id),
         preview: true,
       },
-      attributes: ["spotId", "url"],
     });
 
-    // Format the response with reviews and spot images data
+    // Format the response
     const formattedSpots = userSpots.map((spot) => {
-      const spotReview = spotReviews.find(
-        (review) => review.spotId === spot.id
-      );
-      const spotImage = spotImages.find((image) => image.spotId === spot.id);
-
-      return {
+      const formattedSpot = {
         id: spot.id,
         ownerId: spot.ownerId,
         address: spot.address,
@@ -218,12 +230,23 @@ router.get("/current", requireAuth, async (req, res) => {
         price: spot.price,
         createdAt: spot.createdAt,
         updatedAt: spot.updatedAt,
-        avgRating:
-          spotReview && typeof spotReview.dataValues.avgRating === "number"
-            ? parseFloat(spotReview.dataValues.avgRating.toFixed(1))
-            : null,
-        previewImage: spotImage ? spotImage.url : null,
       };
+
+      // Find the corresponding review for the spot, if it exists
+      const spotReview = reviews.find((review) => review.spotId === spot.id);
+      if (spotReview) {
+        formattedSpot.avgRating = parseFloat(
+          spotReview.avgRating ? spotReview.avgRating.toFixed(1) : null
+        );
+      } else {
+        formattedSpot.avgRating = null;
+      }
+
+      // Find the corresponding spot image for the spot, if it exists
+      const spotImage = spotImages.find((image) => image.spotId === spot.id);
+      formattedSpot.previewImage = spotImage ? spotImage.url : null;
+
+      return formattedSpot;
     });
 
     res.json({
