@@ -228,7 +228,7 @@ router.get("/current", requireAuth, async (req, res) => {
     const avgRatingsObj = {};
     avgRatings.forEach((rating) => {
       avgRatingsObj[rating.spotId] = parseFloat(
-        rating.avgRating ? rating.avgRating.toFixed(1) : null
+        rating.avgRating !== null ? rating.avgRating.toFixed(1) : null
       );
     });
 
