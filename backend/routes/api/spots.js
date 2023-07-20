@@ -149,8 +149,12 @@ router.get("/", async (req, res) => {
         updatedAt: spot.updatedAt,
       };
 
+      console.log("formattedSpots:", formattedSpots);
+
       // Find the corresponding review for the spot, if it exists
       const spotReview = reviews.find((review) => review.spotId === spot.id);
+
+      console.log("spotReviews:", spotReview);
 
       if (spotReview && typeof spotReview.avgRating === "number") {
         console.log("spotReview.avgRating:", spotReview.avgRating);
