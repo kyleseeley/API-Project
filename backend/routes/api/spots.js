@@ -225,12 +225,12 @@ router.get("/current", requireAuth, async (req, res) => {
     });
 
     // Convert the avgRatings array into an object for easy lookup
-    const avgRatingsObj = {};
-    avgRatings.forEach((rating) => {
-      avgRatingsObj[rating.spotId] = parseFloat(
+    const avgRatingsObj = avgRatings.reduce((acc, rating) => {
+      acc[rating.spotId] = parseFloat(
         rating.avgRating !== null ? rating.avgRating.toFixed(1) : null
       );
-    });
+      return acc;
+    }, {});
 
     // Fetch associated spot images for all spots owned by the user
     const spotImages = await SpotImage.findAll({
