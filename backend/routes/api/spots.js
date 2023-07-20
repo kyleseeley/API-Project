@@ -224,9 +224,7 @@ router.get("/current", requireAuth, async (req, res) => {
         [Sequelize.fn("AVG", Sequelize.col("stars")), "avgRating"],
       ],
       where: { spotId: userSpots.map((spot) => spot.id) },
-      group: [
-        "spotId", // Change 'Reviews.spotId' to 'spotId'
-      ],
+      group: ["spotId", "Spot.id"],
       raw: true,
       nested: true,
       include: [{ model: Spot, as: "Spot" }],
