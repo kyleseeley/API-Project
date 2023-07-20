@@ -168,6 +168,12 @@ router.get("/", async (req, res) => {
       return formattedSpot;
     });
 
+    const reviewsForSpots = await Review.findAll({
+      where: {
+        spotId: spotIds,
+      },
+    });
+    console.log("reviewsForSpots:", reviewsForSpots);
     console.log("formattedSpots:", formattedSpots);
 
     // Prepare the response object
