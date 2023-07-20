@@ -86,45 +86,17 @@ router.get("/", async (req, res) => {
     }
 
     // Query the database to fetch all spots based on the filter
-    const allSpots = await Spot.findAll({
+    const allSpots = await Spot.findAndCountAll({
       where: filter,
       order: [["id"]],
-      include: [
-        {
-          model: Review,
-          attributes: [
-            [Sequelize.fn("AVG", Sequelize.col("stars")), "avgRating"],
-          ],
-        },
-        {
-          model: SpotImage,
-          as: "SpotImages",
-          where: { preview: true },
-          attributes: ["id", "url"],
-        },
-      ],
-      group: [
-        "Spot.id",
-        "Spot.ownerId",
-        "Spot.address",
-        "Spot.city",
-        "Spot.state",
-        "Spot.country",
-        "Spot.lat",
-        "Spot.lng",
-        "Spot.name",
-        "Spot.description",
-        "Spot.price",
-        "Spot.createdAt",
-        "Spot.updatedAt",
-        "Reviews.id",
-        "SpotImages.id",
-        "SpotImages.url",
-      ],
+      limit: size,
+      offset: (page - 1) * size,
     });
 
+    const totalCount = allSpots.count;
+
     // Get all spot IDs
-    const spotIds = allSpots.map((spot) => spot.id);
+    const spotIds = allSpots.rows.map((spot) => spot.id);
 
     // Fetch associated reviews for all spots
     const reviews = await Review.findAll({
@@ -132,38 +104,21 @@ router.get("/", async (req, res) => {
         "spotId",
         [Sequelize.fn("AVG", Sequelize.col("stars")), "avgRating"],
       ],
-      where: { spotId: spotIds },
-      group: [
-        "spotId",
-        "Spot.id",
-        "Spot.ownerId",
-        "Spot.address",
-        "Spot.city",
-        "Spot.state",
-        "Spot.country",
-        "Spot.lat",
-        "Spot.lng",
-        "Spot.name",
-        "Spot.description",
-        "Spot.price",
-        "Spot.createdAt",
-        "Spot.updatedAt",
-      ],
+      where: { spotId: allSpots.rows.map((spot) => spot.id) },
+      group: ["spotId"],
       raw: true,
-      nested: true,
-      include: [{ model: Spot, as: "Spot" }],
     });
 
     // Fetch associated spot images for all spots
     const spotImages = await SpotImage.findAll({
       where: {
-        spotId: spotIds,
+        spotId: allSpots.rows.map((spot) => spot.id),
         preview: true,
       },
     });
 
     // Format the response
-    const formattedSpots = allSpots.map((spot) => {
+    const formattedSpots = allSpots.rows.map((spot) => {
       const formattedSpot = {
         id: spot.id,
         ownerId: spot.ownerId,
