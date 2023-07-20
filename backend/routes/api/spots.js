@@ -213,7 +213,7 @@ router.get("/current", requireAuth, async (req, res) => {
       ],
     });
 
-    // Fetch the average rating for all spots owned by the user
+    // Fetch the average ratings for all spots owned by the user
     const avgRatings = await Review.findAll({
       attributes: [
         "spotId",
@@ -224,14 +224,6 @@ router.get("/current", requireAuth, async (req, res) => {
       raw: true,
     });
 
-    // Convert the avgRatings array into an object for easy lookup
-    const avgRatingsObj = avgRatings.reduce((acc, rating) => {
-      acc[rating.spotId] = parseFloat(
-        rating.avgRating !== null ? rating.avgRating.toFixed(1) : null
-      );
-      return acc;
-    }, {});
-
     // Fetch associated spot images for all spots owned by the user
     const spotImages = await SpotImage.findAll({
       where: {
@@ -240,14 +232,16 @@ router.get("/current", requireAuth, async (req, res) => {
       },
     });
 
-    // Convert the spotImages array into an object for easy lookup
-    const spotImagesObj = {};
-    spotImages.forEach((image) => {
-      spotImagesObj[image.spotId] = image.url;
-    });
-
     // Format the response
     const formattedSpots = userSpots.map((spot) => {
+      // Find the average rating for the spot
+      const avgRating = avgRatings.find(
+        (rating) => rating.spotId === spot.id
+      )?.avgRating;
+
+      // Find the corresponding spot image for the spot
+      const spotImage = spotImages.find((image) => image.spotId === spot.id);
+
       const formattedSpot = {
         id: spot.id,
         ownerId: spot.ownerId,
@@ -262,8 +256,8 @@ router.get("/current", requireAuth, async (req, res) => {
         price: spot.price,
         createdAt: spot.createdAt,
         updatedAt: spot.updatedAt,
-        avgRating: avgRatingsObj[spot.id] || null,
-        previewImage: spotImagesObj[spot.id] || null,
+        avgRating: avgRating ? parseFloat(avgRating.toFixed(1)) : null,
+        previewImage: spotImage ? spotImage.url : null,
       };
 
       return formattedSpot;
