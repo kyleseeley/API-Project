@@ -86,11 +86,32 @@ router.get("/", async (req, res) => {
     }
 
     // Query the database to fetch all spots based on the filter
+    // const allSpots = await Spot.findAndCountAll({
+    //   where: filter,
+    //   order: [["id"]],
+    //   limit: size,
+    //   offset: (page - 1) * size,
+    // });
+
     const allSpots = await Spot.findAndCountAll({
       where: filter,
       order: [["id"]],
       limit: size,
       offset: (page - 1) * size,
+      include: [
+        {
+          model: Review,
+          as: "Reviews",
+          attributes: ["stars"],
+        },
+        {
+          model: SpotImage,
+          as: "SpotImages",
+          attributes: ["id", "url", "preview"],
+          where: { preview: true },
+          required: false,
+        },
+      ],
     });
 
     const totalCount = allSpots.count;
@@ -136,15 +157,22 @@ router.get("/", async (req, res) => {
       };
 
       // Find the corresponding review for the spot, if it exists
+      // const spotReview = reviews.find((review) => review.spotId === spot.id);
+      // if (spotReview && typeof spotReview.avgRating === "number") {
+      //   formattedSpot.avgRating = parseFloat(spotReview.avgRating.toFixed(1));
+      // } else {
+      //   formattedSpot.avgRating = null;
+      // }
       const spotReview = reviews.find((review) => review.spotId === spot.id);
+
       if (spotReview && typeof spotReview.avgRating === "number") {
-        formattedSpot.avgRating = parseFloat(spotReview.avgRating.toFixed(1));
+        formattedSpot.avgRating = parseFloat(spotReview.avgRating);
       } else {
         formattedSpot.avgRating = null;
       }
 
       // Find the corresponding spot image for the spot, if it exists
-      const spotImage = spotImages.find((image) => image.spotId === spot.id);
+      const spotImage = spot.SpotImages && spot.SpotImages[0];
       formattedSpot.previewImage = spotImage ? spotImage.url : null;
 
       return formattedSpot;
