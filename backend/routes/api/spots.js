@@ -217,7 +217,7 @@ router.get("/current", requireAuth, async (req, res) => {
     const avgRatings = await Review.findAll({
       attributes: [
         "spotId",
-        [Sequelize.fn("AVG", Sequelize.col("stars")), "avgRating"],
+        [Sequelize.fn("AVG", Sequelize.col("stars")), "avgStarRating"],
       ],
       where: { spotId: userSpots.map((spot) => spot.id) },
       group: ["spotId"],
@@ -227,7 +227,7 @@ router.get("/current", requireAuth, async (req, res) => {
     // Convert the avgRatings array into an object for easy lookup
     const avgRatingsObj = {};
     avgRatings.forEach((rating) => {
-      avgRatingsObj[rating.spotId] = parseFloat(rating.avgRating);
+      avgRatingsObj[rating.spotId] = parseFloat(rating.avgStarRating);
     });
 
     // Fetch associated spot images for all spots owned by the user
