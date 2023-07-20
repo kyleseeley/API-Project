@@ -226,7 +226,22 @@ router.get("/current", requireAuth, async (req, res) => {
         [Sequelize.fn("AVG", Sequelize.col("stars")), "avgRating"],
       ],
       where: { spotId: userSpots.map((spot) => spot.id) },
-      group: ["spotId"],
+      group: [
+        "spotId",
+        "Spot.id", // Include Spot.id in the GROUP BY clause
+        "Spot.ownerId", // Include Spot.ownerId in the GROUP BY clause
+        "Spot.address", // Include Spot.address in the GROUP BY clause
+        "Spot.city", // Include Spot.city in the GROUP BY clause
+        "Spot.state", // Include Spot.state in the GROUP BY clause
+        "Spot.country", // Include Spot.country in the GROUP BY clause
+        "Spot.lat", // Include Spot.lat in the GROUP BY clause
+        "Spot.lng", // Include Spot.lng in the GROUP BY clause
+        "Spot.name", // Include Spot.name in the GROUP BY clause
+        "Spot.description", // Include Spot.description in the GROUP BY clause
+        "Spot.price", // Include Spot.price in the GROUP BY clause
+        "Spot.createdAt", // Include Spot.createdAt in the GROUP BY clause
+        "Spot.updatedAt", // Include Spot.updatedAt in the GROUP BY clause
+      ],
       raw: true,
       nested: true,
       include: [{ model: Spot, as: "Spot" }],
