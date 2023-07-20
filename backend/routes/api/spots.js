@@ -107,31 +107,10 @@ router.get("/", async (req, res) => {
       ],
     });
 
-    console.log("allSpots:", allSpots);
-
     const totalCount = allSpots.count;
 
     // Get all spot IDs
     const spotIds = allSpots.rows.map((spot) => spot.id);
-
-    // Fetch associated reviews for all spots
-    const reviews = await Review.findAll({
-      attributes: [
-        "spotId",
-        [Sequelize.fn("AVG", Sequelize.col("stars")), "avgRating"],
-      ],
-      where: { spotId: spotIds },
-      group: ["spotId"],
-      raw: true,
-    });
-
-    // Fetch associated spot images for all spots
-    const spotImages = await SpotImage.findAll({
-      where: {
-        spotId: allSpots.rows.map((spot) => spot.id),
-        preview: true,
-      },
-    });
 
     // Fetch the average rating for all spots owned by the user
     const avgRatings = await Review.findAll({
@@ -139,7 +118,7 @@ router.get("/", async (req, res) => {
         "spotId",
         [Sequelize.fn("AVG", Sequelize.col("stars")), "avgRating"],
       ],
-      where: { spotId: allSpots.rows.map((spot) => spot.id) },
+      where: { spotId: spotIds },
       group: ["spotId"],
       raw: true,
     });
@@ -168,15 +147,6 @@ router.get("/", async (req, res) => {
         updatedAt: spot.updatedAt,
         avgRating: avgRatingsObj[spot.id] || null,
       };
-
-      // Find the corresponding review for the spot, if it exists
-      // const spotReview = reviews.find((review) => review.spotId === spot.id);
-
-      // if (spotReview && typeof spotReview.avgRating === "number") {
-      //   formattedSpot.avgRating = Math.round(spotReview.avgRating * 10) / 10;
-      // } else {
-      //   formattedSpot.avgRating = null;
-      // }
 
       // Find the corresponding spot image for the spot, if it exists
       const spotImage = spot.SpotImages && spot.SpotImages[0];
