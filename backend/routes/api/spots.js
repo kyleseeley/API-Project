@@ -224,6 +224,8 @@ router.get("/current", requireAuth, async (req, res) => {
       raw: true,
     });
 
+    console.log("avgRatings:", avgRatings);
+
     // Fetch associated spot images for all spots owned by the user
     const spotImages = await SpotImage.findAll({
       where: {
