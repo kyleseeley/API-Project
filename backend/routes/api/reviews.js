@@ -96,6 +96,12 @@ router.get("/current", requireAuth, async (req, res) => {
   }
 });
 
+const isValidUrl = (url) => {
+  // Regular expression to validate URLs
+  const urlPattern = new RegExp(/^(ftp|http|https):\/\/[^ "]+$/);
+  return urlPattern.test(url);
+};
+
 router.post("/:reviewId/images", requireAuth, async (req, res) => {
   const reviewId = req.params.reviewId;
   const userId = req.user.id;
@@ -115,6 +121,11 @@ router.post("/:reviewId/images", requireAuth, async (req, res) => {
     return res.status(403).json({
       message: "Maximum number of images for this resource was reached",
     });
+  }
+
+  // Check if the URL is a valid URL
+  if (!isValidUrl(url)) {
+    return res.status(400).json({ message: "Invalid URL" });
   }
 
   // Create the new image for the review

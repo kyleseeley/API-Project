@@ -24,7 +24,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false,
         validate: {
-          isUrl: true,
+          isUrl: {
+            args: true,
+            msg: "Invalid URL format",
+          },
         },
       },
       preview: {

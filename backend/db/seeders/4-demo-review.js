@@ -41,6 +41,12 @@ module.exports = {
           review: "Not enough toilet paper",
           stars: 1,
         },
+        {
+          spotId: 4,
+          userId: 3,
+          review: "Very Sporty",
+          stars: 4,
+        },
       ],
       {}
     );
