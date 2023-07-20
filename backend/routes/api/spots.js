@@ -262,8 +262,8 @@ router.get("/current", requireAuth, async (req, res) => {
         price: spot.price,
         createdAt: spot.createdAt,
         updatedAt: spot.updatedAt,
-        avgRating: avgRatingsObj[spot.id], // Lookup the average rating for this spot
-        previewImage: spotImagesObj[spot.id] || null, // Lookup the preview image URL for this spot
+        avgRating: avgRatingsObj[spot.id] || null,
+        previewImage: spotImagesObj[spot.id] || null,
       };
 
       return formattedSpot;
