@@ -132,7 +132,7 @@ router.get("/", async (req, res) => {
 
       // Find the corresponding review for the spot, if it exists
       const spotReview = reviews.find((review) => review.spotId === spot.id);
-      if (spotReview && spotReview.dataValues.avgRating !== null) {
+      if (spotReview && typeof spotReview.dataValues.avgRating === "number") {
         formattedSpot.avgRating = parseFloat(
           spotReview.dataValues.avgRating.toFixed(1)
         );
@@ -215,9 +215,10 @@ router.get("/current", requireAuth, async (req, res) => {
         price: spot.price,
         createdAt: spot.createdAt,
         updatedAt: spot.updatedAt,
-        avgRating: spotReview
-          ? parseFloat(spotReview.dataValues.avgRating.toFixed(1))
-          : null,
+        avgRating:
+          spotReview && typeof spotReview.dataValues.avgRating === "number"
+            ? parseFloat(spotReview.dataValues.avgRating.toFixed(1))
+            : null,
         previewImage: spotImage ? spotImage.url : null,
       };
     });
@@ -245,7 +246,7 @@ router.get("/:spotId", async (req, res) => {
         },
         {
           model: User,
-          as: "Owner",
+          as: "Owners", // Update this to "Owners" instead of "Owner"
           attributes: ["id", "firstName", "lastName"],
         },
         {
@@ -260,7 +261,9 @@ router.get("/:spotId", async (req, res) => {
     }
 
     const avgRating = await Review.findOne({
-      attributes: [[literal("AVG(stars)"), "avgStarRating"]],
+      attributes: [
+        [Sequelize.fn("AVG", Sequelize.col("stars")), "avgStarRating"],
+      ],
       where: { spotId },
     });
 
@@ -280,11 +283,11 @@ router.get("/:spotId", async (req, res) => {
       updatedAt: spot.rows[0].updatedAt,
       numReviews: spot.count,
       avgStarRating:
-        avgRating && avgRating.avgRating !== null
-          ? parseFloat(avgRating.avgRating.toFixed(1))
+        avgRating && avgRating.getDataValue("avgStarRating") !== null
+          ? parseFloat(avgRating.getDataValue("avgStarRating").toFixed(1))
           : null,
       SpotImages: spot.rows[0].SpotImages,
-      Owner: spot.rows[0].Owner,
+      Owner: spot.rows[0].Owners, // Update this to "Owners" instead of "Owner"
     };
 
     res.json(response);
