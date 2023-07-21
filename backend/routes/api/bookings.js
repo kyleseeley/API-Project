@@ -53,7 +53,7 @@ router.get("/current", requireAuth, async (req, res) => {
   const formattedBookings = allBookings.map((booking) => {
     const { Spot, ...rest } = booking.toJSON();
     const previewImage =
-      Spot.SpotImages && Spot.SpotImages.length > 0
+      Spot && Spot.SpotImages && Spot.SpotImages.length > 0
         ? Spot.SpotImages[0].url
         : null;
 
