@@ -51,27 +51,27 @@ router.get("/current", requireAuth, async (req, res) => {
   });
 
   const formattedBookings = allBookings.map((booking) => {
-    console.log("Booking object:", booking.toJSON());
-    const { Spot, ...rest } = booking.toJSON();
-    console.log("Spot object:", Spot);
+    const { Spot } = booking.toJSON();
     const previewImage =
       Spot && Spot.SpotImages && Spot.SpotImages.length > 0
         ? Spot.SpotImages[0].url
         : null;
 
-    const spotAttributes = {
-      id: Spot.id,
-      ownerId: Spot.ownerId,
-      address: Spot.address,
-      city: Spot.city,
-      state: Spot.state,
-      country: Spot.country,
-      lat: Spot.lat,
-      lng: Spot.lng,
-      name: Spot.name,
-      price: Spot.price,
-      previewImage,
-    };
+    const spotAttributes = Spot
+      ? {
+          id: Spot.id,
+          ownerId: Spot.ownerId,
+          address: Spot.address,
+          city: Spot.city,
+          state: Spot.state,
+          country: Spot.country,
+          lat: Spot.lat,
+          lng: Spot.lng,
+          name: Spot.name,
+          price: Spot.price,
+          previewImage,
+        }
+      : null;
 
     const startDate = booking.startDate.toISOString().substring(0, 10);
     const endDate = booking.endDate.toISOString().substring(0, 10);
