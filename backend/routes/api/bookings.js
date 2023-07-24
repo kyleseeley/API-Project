@@ -86,6 +86,13 @@ router.get("/current", requireAuth, async (req, res) => {
     };
   });
 
+  if (formattedBookings.length === 0) {
+    // If the user has no bookings, send a custom error response
+    return res.status(404).json({
+      message: "Current user has no bookings",
+    });
+  }
+
   const response = {
     Bookings: formattedBookings,
   };
