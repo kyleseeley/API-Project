@@ -174,6 +174,10 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/current", requireAuth, async (req, res) => {
+  if (!req.user || !req.user.id) {
+    return res.status(401).json({ message: "Authentication required" });
+  }
+
   const userId = req.user.id;
 
   try {
@@ -337,7 +341,33 @@ router.post("/", requireAuth, async (req, res) => {
   const ownerId = req.user.id;
 
   const errors = {};
-  // ... (your validation code)
+  if (!address) {
+    errors.address = "Street address is required";
+  }
+  if (!city) {
+    errors.city = "City is required";
+  }
+  if (!state) {
+    errors.state = "State is required";
+  }
+  if (!country) {
+    errors.country = "Country is required";
+  }
+  if (isNaN(parseFloat(lat))) {
+    errors.lat = "Latitude is not valid";
+  }
+  if (isNaN(parseFloat(lng))) {
+    errors.lng = "Longitude is not valid";
+  }
+  if (!name || name.length > 49) {
+    errors.name = "Name must be less than 50 characters";
+  }
+  if (!description) {
+    errors.description = "Description is required";
+  }
+  if (!price) {
+    errors.price = "Price per day is required";
+  }
 
   // If there are validation errors, return the error response
   if (Object.keys(errors).length > 0) {
@@ -382,8 +412,21 @@ router.post("/", requireAuth, async (req, res) => {
 
     return res.json(newSpot);
   } catch (error) {
-    console.error("Error creating new spot:", error);
-    return res.status(500).json({ message: "Server Error" });
+    if (error.name === "SequelizeValidationError") {
+      // Handle Sequelize validation errors
+      const validationErrors = {};
+      error.errors.forEach((err) => {
+        validationErrors[err.path] = err.message;
+      });
+      return res.status(400).json({
+        message: "Bad Request",
+        errors: validationErrors,
+      });
+    } else {
+      // Handle other errors
+      console.error("Error creating new spot:", error);
+      return res.status(500).json({ message: "Server Error" });
+    }
   }
 });
 
@@ -474,6 +517,23 @@ router.put("/:spotId", requireAuth, async (req, res) => {
     return res.status(403).json({ message: "Forbidden" });
   }
 
+  const existingSpot = await Spot.findOne({
+    where: {
+      address,
+      city,
+      state,
+      id: { [Op.ne]: spotId }, // Exclude the current spot ID from the query
+    },
+  });
+
+  if (existingSpot) {
+    // Spot with the same address, city, and state already exists
+    return res.status(409).json({
+      message: "Conflict",
+      errors: { duplicate: "Spot with the same address already exists" },
+    });
+  }
+
   spot.address = address;
   spot.city = city;
   spot.state = state;
@@ -560,6 +620,13 @@ router.post("/:spotId/reviews", requireAuth, async (req, res) => {
     return res
       .status(403)
       .json({ message: "User already has a review for this spot" });
+  }
+
+  // Check if the user owns the spot
+  if (spot.ownerId === userId) {
+    return res
+      .status(403)
+      .json({ message: "User cannot review their own spot" });
   }
 
   // Validate the request body
