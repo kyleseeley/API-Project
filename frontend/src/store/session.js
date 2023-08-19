@@ -26,6 +26,7 @@ export const login = (user) => async (dispatch) => {
     }),
   });
   const data = await response.json();
+  localStorage.setItem("token", data.token);
   dispatch(setUser(data.user));
   return response;
 };
@@ -41,6 +42,7 @@ export const logout = () => async (dispatch) => {
   const response = await csrfFetch("/api/session", {
     method: "DELETE",
   });
+  localStorage.removeItem("token");
   dispatch(removeUser());
   return response;
 };

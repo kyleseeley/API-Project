@@ -14,7 +14,9 @@ function App() {
 
   useEffect(() => {
     console.log("useEffect triggered is App.js");
-    if (!userRestored && sessionUser) {
+    const storedToken = localStorage.getItem("token");
+
+    if (!userRestored && storedToken) {
       dispatch(sessionActions.restoreUser()).then(() => {
         setIsLoaded(true);
         setUserRestored(true);
