@@ -1,0 +1,70 @@
+/* LoginFormPage.css */
+
+/* Form container */
+/* .form-container {
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+} */
+
+/* Form title */
+.form-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Input fields */
+.form-input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form-input-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  text-align: center;
+  width: 80%;
+  margin: 0 auto;
+  display: block;
+}
+
+/* Error message */
+.error-message {
+  color: #ff3333;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+/* Submit button */
+.submit-button {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 80%;
+  margin: 0 auto;
+  display: block;
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+}

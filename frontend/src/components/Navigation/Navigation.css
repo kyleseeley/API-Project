@@ -1,3 +1,82 @@
+.navigation-menu {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+}
+
+/* Style for navigation links */
+.navigation-menu li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  font-size: 18px;
+  transition: color 0.2s;
+  position: relative;
+  left: 2rem; /* Adjust this value as needed */
+}
+
+.navigation-menu li a:hover {
+  color: #007bff;
+}
+
+/* Style for the profile button container */
+.profile-button {
+  display: flex;
+  align-items: center;
+  position: relative;
+  right: 2rem; /* Adjust this value as needed */
+}
+
+/* Style for the profile button icon */
+.profile-button i {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Style for the dropdown menu */
+.profile-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  /* left: auto; */
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: none;
+  list-style-type: none;
+  padding: 0;
+}
+
+/* Show the dropdown menu when the profile button is clicked */
+.profile-button:hover .profile-dropdown {
+  display: block;
+}
+
+/* Style for the dropdown menu items */
+.profile-dropdown li {
+  padding: 4px 10px;
+  white-space: nowrap;
+  cursor: pointer;
+  margin: 10px 0;
+  /* display: flex; */
+  /* align-items: center; */
+}
+
+.profile-dropdown li::before {
+  content: "•";
+  margin-right: 5px;
+  color: black;
+}
+
+/* Style for the dropdown menu items on hover */
+.profile-dropdown li:hover {
+  background-color: #f0f0f0;
+}
+
 .hidden {
   display: none;
 }

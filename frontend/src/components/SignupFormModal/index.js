@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import * as sessionActions from "../../store/session";
+import "./SignupForm.css";
+import { useModal } from "../../context/Modal";
 
-function SignupFormPage() {
+function SignupFormModal() {
   const dispatch = useDispatch();
   const sessionUser = useSelector((state) => state.session.user);
   const [email, setEmail] = useState("");
@@ -13,6 +15,7 @@ function SignupFormPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const { closeModal } = useModal();
 
   if (sessionUser) return <Redirect to="/" />;
 
@@ -28,12 +31,14 @@ function SignupFormPage() {
           lastName,
           password,
         })
-      ).catch(async (res) => {
-        const data = await res.json();
-        if (data && data.errors) {
-          setErrors(data.errors);
-        }
-      });
+      )
+        .then(closeModal)
+        .catch(async (res) => {
+          const data = await res.json();
+          if (data && data.errors) {
+            setErrors(data.errors);
+          }
+        });
     }
     return setErrors({
       confirmPassword:
@@ -43,11 +48,12 @@ function SignupFormPage() {
 
   return (
     <>
-      <h1>Sign Up</h1>
+      <h1 className="form-title">Sign Up</h1>
       <form onSubmit={handleSubmit}>
-        <label>
+        <label className="form-input-label">
           Email
           <input
+            className="form-input"
             type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -55,9 +61,10 @@ function SignupFormPage() {
           />
         </label>
         {errors.email && <p>{errors.email}</p>}
-        <label>
+        <label className="form-input-label">
           Username
           <input
+            className="form-input"
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -65,9 +72,10 @@ function SignupFormPage() {
           />
         </label>
         {errors.username && <p>{errors.username}</p>}
-        <label>
+        <label className="form-input-label">
           First Name
           <input
+            className="form-input"
             type="text"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
@@ -75,9 +83,10 @@ function SignupFormPage() {
           />
         </label>
         {errors.firstName && <p>{errors.firstName}</p>}
-        <label>
+        <label className="form-input-label">
           Last Name
           <input
+            className="form-input"
             type="text"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
@@ -85,9 +94,10 @@ function SignupFormPage() {
           />
         </label>
         {errors.lastName && <p>{errors.lastName}</p>}
-        <label>
+        <label className="form-input-label">
           Password
           <input
+            className="form-input"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -95,9 +105,10 @@ function SignupFormPage() {
           />
         </label>
         {errors.password && <p>{errors.password}</p>}
-        <label>
+        <label className="form-input-label">
           Confirm Password
           <input
+            className="form-input"
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
@@ -105,10 +116,12 @@ function SignupFormPage() {
           />
         </label>
         {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
-        <button type="submit">Sign Up</button>
+        <button className="submit-button" type="submit">
+          Sign Up
+        </button>
       </form>
     </>
   );
 }
 
-export default SignupFormPage;
+export default SignupFormModal;
