@@ -1,34 +1,43 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchSpots } from "../../store/spots";
 
 const LandingPage = () => {
   const dispatch = useDispatch();
-  //   const spots = useSelector((state) => Object.values(state.spots));
-  //   const spots = useSelector((state) => {
-  //     //   return Object.values(state.spots).map((spot) => spot);
-  //     return Object.values(state.spots);
-  //   });
 
-  const spots = useSelector((state) => state.spots);
-
-  console.log("Spots from redux:", spots);
+  const spotsData = useSelector((state) => state.spots.spots);
 
   useEffect(() => {
     dispatch(fetchSpots());
-    console.log("Fetch Spots:");
   }, [dispatch]);
 
   return (
     <>
-      <ol>
-        {Object.values(spots).map(({ id, name }) => (
-          <li key={id}>
-            <Link to={`/spots/${id}`}>{name}</Link>
-          </li>
+      <ul>
+        {spotsData.map((spotGroup) => (
+          <ul key={spotGroup[0].id}>
+            {spotGroup.map(
+              ({ id, name, city, state, price, avgRating, previewImage }) => (
+                <li key={id}>
+                  <div>
+                    <img src={previewImage} alt="Preview" />
+                  </div>
+                  <div>
+                    <p>
+                      {city}, {state}
+                    </p>
+                    <p>Price: ${price} per day</p>
+                    <p>Average Rating: {avgRating}</p>
+                    <p>{name}</p>
+                  </div>
+                  {/* <Link to={`/spots/${id}`}>{name}</Link> */}
+                </li>
+              )
+            )}
+          </ul>
         ))}
-      </ol>
+      </ul>
     </>
   );
 };

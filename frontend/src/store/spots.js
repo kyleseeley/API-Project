@@ -13,7 +13,6 @@ export const fetchSpots = () => async (dispatch) => {
       throw new Error("Error fetching spots");
     }
     const spots = await response.json();
-    console.log("spots before dispatch", spots);
     dispatch(loadSpots(spots));
   } catch (error) {
     console.log("Error fetching spots", error);
