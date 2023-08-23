@@ -20,7 +20,7 @@ module.exports = {
           country: "United States of America",
           lat: 37.7645358,
           lng: -122.4730327,
-          name: "App Academy",
+          name: "Tech Palace",
           description: "Place where web developers are created",
           price: 123,
         },
