@@ -33,12 +33,11 @@ function App() {
   return (
     <>
       <Navigation isLoaded={isLoaded} />
-      {isLoaded && (
-        <Switch>
-          <Route path="/" component={LandingPage} />
-          <Route path="/spots/:id" component={SpotDetails} />
-        </Switch>
-      )}
+
+      <Switch>
+        <Route exact path="/" component={LandingPage} />
+        <Route path="/spots/:id" component={SpotDetails} />
+      </Switch>
     </>
   );
 }

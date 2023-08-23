@@ -49,6 +49,7 @@ const spotsReducer = (state = initialState, action) => {
     case LOAD_SPOTS:
       return { ...state, spots: Object.values(action.spots) };
     case RECEIVE_SPOT:
+      console.log("Received spot:", action.spot);
       return { ...state, selectedSpot: action.spot };
     default:
       return state;

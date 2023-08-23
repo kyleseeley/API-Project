@@ -7,15 +7,22 @@ const SpotDetails = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
 
-  const spot = useSelector((state) =>
-    state.spots.spots.find((s) => s.id === id)
-  );
+  const selectedSpot = useSelector((state) => state.spots.selectedSpot);
+
+  console.log("SpotDetails Spot", selectedSpot);
 
   useEffect(() => {
     dispatch(fetchSpotDetails(id));
   }, [dispatch, id]);
 
-  return <div>{spot ? <h2>{spot.name}</h2> : <p>Loading...</p>}</div>;
+  return (
+    <div>
+      <h2>{selectedSpot.name}</h2>
+      <h3>
+        {selectedSpot.city}, {selectedSpot.state}, {selectedSpot.country}
+      </h3>
+    </div>
+  );
 };
 
 export default SpotDetails;
