@@ -4,7 +4,8 @@
   align-items: center;
   justify-content: space-between;
   margin: 0;
-  padding: 0;
+  padding: 10px;
+  border-bottom: solid lightgray 1px;
 }
 
 /* Style for navigation links */
@@ -41,7 +42,7 @@
   position: absolute;
   top: 100%;
   right: 0;
-  /* left: auto; */
+  left: auto;
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 5px;

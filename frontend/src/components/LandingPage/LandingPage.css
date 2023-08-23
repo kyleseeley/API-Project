@@ -21,8 +21,8 @@
   display: flex;
   flex-direction: column;
   border: 1px solid #ccc;
-  padding: 0 20px;
-  border-radius: 5px; /* Add border-radius to maintain consistent styling */
+  padding: 0px 20px;
+  border-radius: 5px;
   overflow: hidden;
   position: relative;
 }
@@ -47,10 +47,22 @@
 }
 
 .spot-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 200px;
+  width: 100%;
   /* margin-bottom: 10px; */
   overflow: hidden;
   /* position: relative; */
+  margin-top: 8px;
+  background-position: center;
+}
+
+.spot-image img {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
 }
 
 .spot-details {
@@ -68,12 +80,6 @@
   right: 0; /* Position at the right */
   margin: 5px 0;
   text-align: right;
-}
-
-.spot-image img {
-  max-width: 100%;
-  height: auto;
-  object-fit: cover;
 }
 
 .spot-link {
