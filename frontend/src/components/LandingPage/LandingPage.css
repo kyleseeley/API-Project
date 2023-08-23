@@ -1,0 +1,93 @@
+/* .spot-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+} */
+
+.spot-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  list-style: none;
+  padding: 0 20px;
+}
+
+.spot-item {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 5px; /* Add border-radius to maintain consistent styling */
+  overflow: hidden;
+  position: relative;
+}
+
+.tooltip {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) scaleY(0);
+  background-color: red;
+  color: skyblue;
+  padding: 5px 10px;
+  border-radius: 5px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+  transition: transform 0.3s, opacity 0.3s;
+}
+
+.spot-item:hover .tooltip {
+  transform: translateX(-50%) scaleY(1);
+  opacity: 1;
+}
+
+.spot-image {
+  height: 200px;
+  /* margin-bottom: 10px; */
+  overflow: hidden;
+  /* position: relative; */
+}
+
+.spot-details {
+  position: relative;
+  flex: 1;
+}
+
+.spot-details p {
+  margin: 5px 0;
+}
+
+.avg-rating {
+  position: absolute;
+  top: 0; /* Position at the top */
+  right: 0; /* Position at the right */
+  margin: 5px 0;
+  text-align: right;
+}
+
+.spot-image img {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.spot-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.spot-link:hover {
+  background-color: #f0f0f0;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+@media (min-width: 1200px) {
+  .spot-group {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

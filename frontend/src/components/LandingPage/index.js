@@ -1,7 +1,8 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchSpots } from "../../store/spots";
+import "./LandingPage.css";
 
 const LandingPage = () => {
   const dispatch = useDispatch();
@@ -13,32 +14,39 @@ const LandingPage = () => {
   }, [dispatch]);
 
   return (
-    <>
-      <ul>
-        {spotsData.map((spotGroup) => (
-          <ul key={spotGroup[0].id}>
-            {spotGroup.map(
-              ({ id, name, city, state, price, avgRating, previewImage }) => (
-                <li key={id}>
-                  <div>
+    <ul className="spot-list">
+      {spotsData.map((spotGroup) => (
+        <li key={spotGroup[0].id} className="spot-group">
+          {spotGroup.map(
+            ({ id, name, city, state, price, avgRating, previewImage }) => (
+              <Link
+                to={`/spots/${id}`}
+                className="spot-link"
+                key={id}
+                data-name={name}
+              >
+                <div key={id} className="spot-item">
+                  <div className="spot-image">
                     <img src={previewImage} alt="Preview" />
                   </div>
-                  <div>
+                  <div className="spot-details">
                     <p>
                       {city}, {state}
                     </p>
-                    <p>Price: ${price} per day</p>
-                    <p>Average Rating: {avgRating}</p>
-                    <p>{name}</p>
+                    <p>${price}/night</p>
+                    <p className="avg-rating">
+                      <i className="fa-solid fa-star"></i>
+                      {avgRating}
+                    </p>
                   </div>
-                  {/* <Link to={`/spots/${id}`}>{name}</Link> */}
-                </li>
-              )
-            )}
-          </ul>
-        ))}
-      </ul>
-    </>
+                  <div className="tooltip">{name}</div>
+                </div>
+              </Link>
+            )
+          )}
+        </li>
+      ))}
+    </ul>
   );
 };
 

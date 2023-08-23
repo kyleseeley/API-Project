@@ -10,8 +10,10 @@ function Navigation({ isLoaded }) {
   return (
     <ul className="navigation-menu">
       <li>
-        <NavLink exact to="/">
-          Home
+        <NavLink exact to="/" style={{ color: "red", fontSize: "24px" }}>
+          <i className="fa-brands fa-skyatlas" />
+          {"  "}
+          skyrnr
         </NavLink>
       </li>
       {isLoaded && (
