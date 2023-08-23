@@ -49,6 +49,7 @@
   display: none;
   list-style-type: none;
   padding: 0;
+  z-index: 2;
 }
 
 /* Show the dropdown menu when the profile button is clicked */
