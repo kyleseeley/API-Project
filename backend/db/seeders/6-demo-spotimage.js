@@ -47,6 +47,16 @@ module.exports = {
           preview: true,
         },
         {
+          spotId: 2,
+          url: "https://mlsandiegomag.com/get/files/image/galleries/El_Vuelo.jpg",
+          preview: false,
+        },
+        {
+          spotId: 2,
+          url: "https://image.cnbcfm.com/api/v1/image/107057211-532-neptune-ave-102.jpg?v=1651846914&w=929&h=523&ffmt=webp&vtcrop=y",
+          preview: false,
+        },
+        {
           spotId: 3,
           url: "https://image.cnbcfm.com/api/v1/image/107127831-4001_E_Quincy_Avenue-149.jpg?v=1664790001",
           preview: true,
@@ -57,6 +67,16 @@ module.exports = {
           preview: false,
         },
         {
+          spotId: 3,
+          url: "https://image.cnbcfm.com/api/v1/image/107126805-1664479356640-a4001_E_Quincy_Avenue-198.jpg?v=1664791201&w=929&h=523&vtcrop=y",
+          preview: false,
+        },
+        {
+          spotId: 3,
+          url: "https://image.cnbcfm.com/api/v1/image/107126795-1664479382715-a4001_E_Quincy_Avenue-197.jpg?v=1664791201&w=929&h=523&ffmt=webp&vtcrop=y",
+          preview: false,
+        },
+        {
           spotId: 4,
           url: "https://images.wsj.net/im-535702/?width=1278&size=1",
           preview: true,
@@ -64,6 +84,46 @@ module.exports = {
         {
           spotId: 4,
           url: "https://cdn.vox-cdn.com/thumbor/Yg8yO151MUkPkRn-jgE5iU-oNU4=/0x0:1024x767/1200x900/filters:focal(431x303:593x465):no_upscale()/cdn.vox-cdn.com/uploads/chorus_image/image/62569176/IS6257src1nr7p0000000000.0.0.jpg",
+          preview: false,
+        },
+        {
+          spotId: 4,
+          url: "https://media1.miaminewtimes.com/mia/imager/u/blog/14470412/24_la_gorce_circle_19.jpg?cb=1690310507",
+          preview: false,
+        },
+        {
+          spotId: 4,
+          url: "https://media1.miaminewtimes.com/mia/imager/u/blog/14471449/22_la_gorce_circle_14.jpg?cb=1690310505",
+          preview: false,
+        },
+        {
+          spotId: 4,
+          url: "https://media2.miaminewtimes.com/mia/imager/u/blog/14471452/16_la_gorce_circle_1_67.jpg?cb=1690310506",
+          preview: false,
+        },
+        {
+          spotId: 4,
+          url: "https://oceandrive.com/get/files/image/galleries/16-La-Gorce_Circle-1-43.jpg",
+          preview: false,
+        },
+        {
+          spotId: 4,
+          url: "https://oceandrive.com/get/files/image/galleries/16-La-Gorce_Circle-1-47.jpg",
+          preview: false,
+        },
+        {
+          spotId: 4,
+          url: "https://oceandrive.com/get/files/image/galleries/16-La-Gorce_Circle-1-56.jpg",
+          preview: false,
+        },
+        {
+          spotId: 4,
+          url: "https://oceandrive.com/get/files/image/galleries/16-La-Gorce_Circle-1-57.jpg",
+          preview: false,
+        },
+        {
+          spotId: 4,
+          url: "https://oceandrive.com/get/files/image/galleries/16-La-Gorce_Circle-1-28.jpg",
           preview: false,
         },
       ],

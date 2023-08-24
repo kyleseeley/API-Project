@@ -28,6 +28,7 @@ const SpotDetails = () => {
   }
 
   const mainImage = selectedSpot.SpotImages.find((image) => image.preview);
+  const otherImages = selectedSpot.SpotImages.filter((image) => !image.preview);
 
   return (
     <div className="spot-details-container">
@@ -44,17 +45,15 @@ const SpotDetails = () => {
           />
         </div>
         <div className="other-images">
-          {selectedSpot.SpotImages.filter((image) => !image.preview).map(
-            (image) => (
-              <img
-                className="other-image"
-                key={image.id}
-                src={image.url}
-                alt={selectedSpot.name}
-                onClick={() => openPopout(image)}
-              />
-            )
-          )}
+          {otherImages.map((image) => (
+            <img
+              className="other-image"
+              key={image.id}
+              src={image.url}
+              alt={selectedSpot.name}
+              onClick={() => openPopout(image)}
+            />
+          ))}
         </div>
       </div>
       {popoutImage && (

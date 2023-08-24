@@ -18,7 +18,7 @@
 
 .main-image {
   flex: 1;
-  padding: 16px;
+  padding: 8px;
   border-right: 1px solid #ccc;
   text-align: center;
   max-width: 50%;
@@ -29,25 +29,26 @@
 .main-image img {
   max-width: 100%;
   height: 100%;
-  object-fit: cover; /* Maintain aspect ratio and cover the container */
+  /* object-fit: cover;  */
+  /* Maintain aspect ratio and cover the container */
 }
 
 .other-images {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 8px;
-  padding: 16px;
+  padding: 8px;
   max-width: 50%;
   box-sizing: border-box;
-  max-height: 500px; /* Set maximum height for other images */
-  overflow-y: auto; /* Add scrollbar if content overflows */
+  height: 500px;
+  overflow-y: auto;
 }
 
 .other-image {
   width: 100%;
-  height: 100%;
-  border: 1px solid #ccc;
-  object-fit: cover; /* Maintain aspect ratio and cover the container */
+  height: 238px;
+  /* border: 1px solid #ccc; */
+  object-fit: cover;
 }
 
 .popout {
