@@ -22,6 +22,26 @@ module.exports = {
           preview: false,
         },
         {
+          spotId: 1,
+          url: "https://i.insider.com/5e4c47d62dae5c377f3ca994?width=1000&format=jpeg&auto=webp",
+          preview: false,
+        },
+        {
+          spotId: 1,
+          url: "https://i.insider.com/5e4c47ea4b661b34ef270434?width=750&format=jpeg&auto=webp",
+          preview: false,
+        },
+        {
+          spotId: 1,
+          url: "https://hips.hearstapps.com/hmg-prod/images/image-h-06-1556637719.jpg",
+          preview: false,
+        },
+        {
+          spotId: 1,
+          url: "https://i.insider.com/5e4c48674b661b35b4566366?width=1000&format=jpeg&auto=webp",
+          preview: false,
+        },
+        {
           spotId: 2,
           url: "https://mlsandiegomag.com/get/files/image/galleries/9828LJFarms.jpg",
           preview: true,
