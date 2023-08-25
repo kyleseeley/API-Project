@@ -27,12 +27,18 @@ const SpotDetails = () => {
     return <p>Loading...</p>;
   }
 
+  const handleReserveClick = () => {
+    alert("Feature Coming Soon...");
+  };
+
   const mainImage = selectedSpot.SpotImages.find((image) => image.preview);
   const otherImages = selectedSpot.SpotImages.filter((image) => !image.preview);
+  const hostFirstName = selectedSpot.Owner.firstName;
+  const hostLastName = selectedSpot.Owner.lastName;
 
   return (
     <div className="spot-details-container">
-      <h2 className="Name">{selectedSpot.name}</h2>
+      <h1 className="Name">{selectedSpot.name}</h1>
       <h3 className="Location">
         {selectedSpot.city}, {selectedSpot.state}, {selectedSpot.country}
       </h3>
@@ -54,6 +60,25 @@ const SpotDetails = () => {
               onClick={() => openPopout(image)}
             />
           ))}
+        </div>
+      </div>
+      <h2 className="Name">
+        Hosted by {hostFirstName} {hostLastName}
+      </h2>
+      <div className="details-container">
+        <p className="description">{selectedSpot.description}</p>
+        <div className="spot-info">
+          <div className="spot-info-top">
+            <p className="spot-price">${selectedSpot.price}/night</p>
+            <p className="spot-avgRating">
+              <i className="fa-solid fa-star"></i>
+              {selectedSpot.avgStarRating}
+            </p>
+            <p className="spot-numReviews">{selectedSpot.numReviews} reviews</p>
+          </div>
+          <button className="reserve" onClick={handleReserveClick}>
+            Reserve
+          </button>
         </div>
       </div>
       {popoutImage && (
