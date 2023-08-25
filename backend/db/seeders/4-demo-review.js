@@ -14,37 +14,43 @@ module.exports = {
         {
           spotId: 1,
           userId: 1,
-          review: "This was an awesome spot!",
+          review:
+            "We stayed at Full House the week of our elopement and it was seriously beyond beautiful! The place was gorgeous and had an amazing views. Clean cozy home and had lots of little details that were amazing. Makeup wipe removers, hair dryer, great towels. It was just an amazing stay and Demo was very friendly and helpful with every question we had. 10/10. Highly recommend this place!!",
           stars: 5,
         },
         {
           spotId: 2,
           userId: 1,
-          review: "Not too shabby",
+          review:
+            "Beautiful property and very secluded…which is what we were going for! Highly recommend and we would certainly book again!",
           stars: 4,
         },
         {
           spotId: 3,
           userId: 1,
-          review: "Slept Great",
+          review:
+            "Amazing, relaxing, spacious, super clean, and serene. Very secluded and remote, but close enough to the city for trips to downtown or Denver Tech Center.",
           stars: 4,
         },
         {
           spotId: 3,
           userId: 2,
-          review: "This place was alright",
+          review:
+            "Beautiful place in a great location. Perfect for our group of 2 families. Host very responsive.Would stay again.",
           stars: 3,
         },
         {
           spotId: 2,
           userId: 3,
-          review: "Not enough toilet paper",
-          stars: 1,
+          review:
+            "We loved our stay in this gorgeous house! It’s huge and the living room, decks and master bedroom & bath has amazing views of the ocean and caves of La Jolla. We easily walked to the beach down Princess St, enjoyed the coastal walk trail with a cave visit at the bottom, and walked into the upscale town of La Jolla Cove for shopping and restaurants. The hot tub is excellent after a day at the beach! The host was very responsive and helpful.",
+          stars: 5,
         },
         {
           spotId: 4,
           userId: 3,
-          review: "Very Sporty",
+          review:
+            "This place is absolutely gorgeous and perfect for a large amount of people. Everyone had so much room and the vibe was out of this world. The photos don’t do this place justice! Had the best time in Miami here!",
           stars: 4,
         },
       ],

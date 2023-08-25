@@ -1,12 +1,13 @@
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
-import { fetchSpotDetails } from "../../store/spots";
+import { useEffect, useState, useRef } from "react";
+import { fetchSpotDetails, fetchSpotReviews } from "../../store/spots";
 import "./SpotDetails.css";
 
 const SpotDetails = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const popoutRef = useRef();
   const [popoutImage, setPopoutImage] = useState(null);
 
   const openPopout = (image) => {
@@ -18,10 +19,35 @@ const SpotDetails = () => {
   };
 
   const selectedSpot = useSelector((state) => state.spots.selectedSpot);
+  const spotReviews = useSelector((state) => state.spots.reviews);
+
+  console.log("spotReviews", spotReviews);
 
   useEffect(() => {
     dispatch(fetchSpotDetails(id));
+    dispatch(fetchSpotReviews(id));
   }, [dispatch, id]);
+
+  const isClickInsidePopout = (event) => {
+    if (popoutRef.current && popoutRef.current.contains(event.target)) {
+      return true;
+    }
+    return false;
+  };
+
+  useEffect(() => {
+    const handleMouseDown = (event) => {
+      if (!isClickInsidePopout(event)) {
+        closePopout();
+      }
+    };
+
+    document.addEventListener("mousedown", handleMouseDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handleMouseDown);
+    };
+  }, []);
 
   if (!selectedSpot) {
     return <p>Loading...</p>;
@@ -74,20 +100,55 @@ const SpotDetails = () => {
               <i className="fa-solid fa-star"></i>
               {selectedSpot.avgStarRating}
             </p>
-            <p className="spot-numReviews">{selectedSpot.numReviews} reviews</p>
+            {spotReviews[0] ? (
+              <p className="spot-numReviews">
+                {spotReviews[0].length}{" "}
+                {spotReviews[0].length === 1 ? "review" : "reviews"}
+              </p>
+            ) : (
+              <p>No reviews available</p>
+            )}
           </div>
           <button className="reserve" onClick={handleReserveClick}>
             Reserve
           </button>
         </div>
       </div>
+      {spotReviews[0] ? (
+        <div className="reviews">
+          <h3 className="review-heading">
+            <i className="fa-solid fa-star"></i>
+            {selectedSpot.avgStarRating} &nbsp; &middot; &nbsp;
+            {spotReviews[0].length}{" "}
+            {spotReviews[0].length === 1 ? "review" : "reviews"}
+          </h3>
+          {spotReviews[0].map((review) => (
+            <div key={review.id} className="review-container">
+              <div className="review-header">
+                <h4 className="review-name">{review.User.firstName}</h4>
+                <p className="review-date">
+                  {new Date(review.createdAt).toLocaleDateString("en-US", {
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </p>
+              </div>
+              <p className="review">{review.review}</p>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p>No reviews available</p>
+      )}
       {popoutImage && (
-        <div className="popout">
-          <div className="popout-content">
-            <span className="close-popout" onClick={closePopout}>
-              &times;
-            </span>
-            <img src={popoutImage.url} alt={selectedSpot.name} />
+        <div class="popout-overlay">
+          <div className="popout" ref={popoutRef}>
+            <div className="popout-content">
+              <span className="close-popout" onClick={closePopout}>
+                &times;
+              </span>
+              <img src={popoutImage.url} alt={selectedSpot.name} />
+            </div>
           </div>
         </div>
       )}
