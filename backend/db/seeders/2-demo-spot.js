@@ -22,7 +22,7 @@ module.exports = {
           lng: -122.4730327,
           name: "Stay in our 'Full House'",
           description:
-            "Most notably viewed in the opening credits of the ’80s sitcom Full House, one of San Francisco’s famed “Painted Ladies” is available for your family stay. The house, which is located at 714 Steiner Street, is one of seven Victorian-style homes that make up a picturesque block, also referred to as “Postcard Row,” across from Alamo Square Park in the city’s Western Addition. ",
+            "Most notably viewed in the opening credits of the ’80s sitcom Full House, one of San Francisco’s famed “Painted Ladies” is available for your family stay. The house is one of seven Victorian-style homes that make up “Postcard Row.”",
           price: 123,
         },
         {
@@ -35,7 +35,7 @@ module.exports = {
           lng: -117.1611,
           name: "Call Your Bluff",
           description:
-            "Perched atop its own sea bluff, this very private 8,627-square-foot residence with five bedrooms and seven baths takes full advantage of the natural surroundings with walls of glass and stone terraces from which to watch the sunset. The 1.19-acre property also includes a Savant home automation system, infinity pool, guest house and studio.",
+            "Perched atop its own sea bluff, this very private 8,627 sq ft residence takes advantage of the natural surroundings with walls of glass and stone terraces from which to watch the sunset. The property also includes an infinity pool and studio.",
           price: 712,
         },
         {

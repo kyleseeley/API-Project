@@ -49,7 +49,7 @@ module.exports = {
           allowNull: false,
         },
         description: {
-          type: Sequelize.VARCHAR,
+          type: Sequelize.TEXT,
           allowNull: false,
         },
         price: {

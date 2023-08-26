@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       review: {
-        type: DataTypes.VARCHAR,
+        type: DataTypes.TEXT,
         allowNull: false,
       },
       stars: {

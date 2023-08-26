@@ -74,7 +74,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       description: {
-        type: DataTypes.VARCHAR,
+        type: DataTypes.TEXT,
         allowNull: false,
       },
       price: {
