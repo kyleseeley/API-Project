@@ -25,7 +25,6 @@ export const fetchSpots = () => async (dispatch) => {
       throw new Error("Error fetching spots");
     }
     const spots = await response.json();
-    console.log("fetchSpots before dispatch", spots);
     dispatch(loadSpots(spots));
   } catch (error) {
     console.log("Error fetching spots", error);
@@ -40,7 +39,6 @@ export const fetchSpotDetails = (spotId) => async (dispatch) => {
       throw new Error("Error fetching spot details");
     }
     const spot = await response.json();
-    console.log("fetchSpotDetails before dispatch", spot);
     dispatch(receiveSpot(spot));
   } catch (error) {
     console.log("Error fetching spot details", error);
@@ -72,7 +70,6 @@ const spotsReducer = (state = initialState, action) => {
     case LOAD_SPOTS:
       return { ...state, spots: Object.values(action.spots) };
     case RECEIVE_SPOT:
-      console.log("Received spot:", action.spot);
       return { ...state, selectedSpot: action.spot };
     case SPOT_REVIEWS:
       return { ...state, reviews: Object.values(action.reviews) };

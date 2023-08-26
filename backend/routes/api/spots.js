@@ -408,7 +408,6 @@ router.post("/", requireAuth, async (req, res) => {
       description,
       price,
     });
-    console.log(newSpot);
 
     return res.json(newSpot);
   } catch (error) {
