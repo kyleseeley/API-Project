@@ -24,7 +24,7 @@ module.exports = {
           allowNull: false,
         },
         review: {
-          type: Sequelize.STRING(1000),
+          type: Sequelize.VARCHAR,
           allowNull: false,
         },
         stars: {
