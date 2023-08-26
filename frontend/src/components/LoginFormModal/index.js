@@ -15,6 +15,24 @@ function LoginFormModal() {
 
   if (sessionUser) return <Redirect to="/" />;
 
+  const isButtonDisabled = credential.length < 4 || password.length < 6;
+
+  const handleDemoUserLogin = () => {
+    const demoUser = {
+      credential: "demo@user.io",
+      password: "password",
+    };
+
+    dispatch(sessionActions.login(demoUser))
+      .then(closeModal)
+      .catch(async (res) => {
+        const data = await res.json();
+        if (data && data.message) {
+          setErrors({ credential: data.message });
+        }
+      });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrors({});
@@ -55,9 +73,16 @@ function LoginFormModal() {
         {errors.credential && (
           <p className="error-message">{errors.credential}</p>
         )}
-        <button className="submit-button" type="submit">
+        <button
+          className="submit-button"
+          type="submit"
+          disabled={isButtonDisabled}
+        >
           Log In
         </button>
+        <div className="demo-link-container" onClick={handleDemoUserLogin}>
+          <span className="demo-link">Demo User</span>
+        </div>
       </form>
     </>
   );

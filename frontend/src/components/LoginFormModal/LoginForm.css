@@ -66,6 +66,34 @@
   display: block;
 }
 
+.submit-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.submit-button:disabled:hover {
+  background-color: #ccc;
+}
+
 .submit-button:hover {
   background-color: #0056b3;
+}
+
+.demo-link-container {
+  text-align: center;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.demo-link {
+  display: inline-block;
+  color: #ff9999;
+  text-decoration: underline;
+  cursor: pointer;
+  text-align: center;
+  padding: 10px 20px;
+}
+
+.demo-link:hover {
+  color: #d80000;
 }
