@@ -16,11 +16,14 @@ function Navigation({ isLoaded }) {
           skyrnr
         </NavLink>
       </li>
-      {isLoaded && (
-        <li className="profile-button-container">
-          <ProfileButton user={sessionUser} />
-        </li>
-      )}
+      <li className="create-spot-link">
+        {isLoaded && sessionUser && (
+          <NavLink to="/create-spot">Create a New Spot</NavLink>
+        )}
+      </li>
+      <li className="profile-button-container">
+        <ProfileButton user={sessionUser} />
+      </li>
     </ul>
   );
 }

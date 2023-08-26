@@ -15,21 +15,31 @@
   font-weight: bold;
   font-size: 18px;
   transition: color 0.2s;
-  position: relative;
-  left: 2rem; /* Adjust this value as needed */
+  /* position: relative; */
+  /* left: 2rem; */
 }
 
 .navigation-menu li a:hover {
   color: #007bff;
 }
 
+/* .navigation-menu.user-logged-in .create-spot-link {
+  margin-left: auto;
+  margin-right: 0.5rem;
+} */
+
 /* Style for the profile button container */
-.profile-button {
+.profile-button-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+/* .profile-button {
   display: flex;
   align-items: center;
   position: relative;
-  right: 2rem; /* Adjust this value as needed */
-}
+  right: 2rem;
+} */
 
 /* Style for the profile button icon */
 .profile-button i {
@@ -54,7 +64,7 @@
 }
 
 /* Show the dropdown menu when the profile button is clicked */
-.profile-button:hover .profile-dropdown {
+.profile-button-container:hover .profile-dropdown {
   display: block;
 }
 
@@ -81,4 +91,22 @@
 
 .hidden {
   display: none;
+}
+
+.create-spot-link {
+  margin-right: 2rem; /* Push it to the right */
+  margin-left: auto; /* Adjust this value as needed */
+  align-self: center; /* Center the link vertically */
+}
+
+.create-spot-link a {
+  text-decoration: none;
+  color: red;
+  font-weight: bold;
+  font-size: 18px;
+  transition: color 0.2s;
+}
+
+.create-spot-link a:hover {
+  color: darkred;
 }
