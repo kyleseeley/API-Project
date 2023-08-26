@@ -15,7 +15,7 @@ module.exports = {
           spotId: 1,
           userId: 1,
           review:
-            "We stayed at Full House the week of our elopement and it was seriously beyond beautiful! The place was gorgeous and had an amazing views. Clean cozy home and had lots of little details that were amazing. Makeup wipe removers, hair dryer, great towels. It was just an amazing stay and Demo was very friendly and helpful with every question we had. 10/10. Highly recommend this place!!",
+            "We stayed at Full House the week of our elopement and it was seriously beyond beautiful! The place was gorgeous. Clean cozy home and had lots of little details that were amazing.  Demo was very friendly and helpful with every question we had. 10/10.",
           stars: 5,
         },
         {
@@ -43,7 +43,7 @@ module.exports = {
           spotId: 2,
           userId: 3,
           review:
-            "We loved our stay in this gorgeous house! It’s huge and the living room, decks and master bedroom & bath has amazing views of the ocean and caves of La Jolla. We easily walked to the beach down Princess St, enjoyed the coastal walk trail with a cave visit at the bottom, and walked into the upscale town of La Jolla Cove for shopping and restaurants. The hot tub is excellent after a day at the beach! The host was very responsive and helpful.",
+            "We loved our stay in this gorgeous house! It’s huge and the living room, decks and master bedroom & bath has amazing views of the ocean and caves of La Jolla. The hot tub is excellent after a day at the beach! The host was very responsive and helpful.",
           stars: 5,
         },
         {

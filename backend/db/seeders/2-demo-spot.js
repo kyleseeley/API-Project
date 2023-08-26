@@ -48,7 +48,7 @@ module.exports = {
           lng: -104.9903,
           name: "Clearview Farm",
           description:
-            "The estate spans nearly 15 acres with a 1.5-acre pond and unobstructed views of the Rocky Mountains. The residence unfolds over two separate structures including an almost 13,800-square-foot main house with a multitiered sundeck and partially subterranean level that connects to a two-story poolside structure.",
+            "The estate spans nearly 15 acres with a 1.5-acre pond and views of the Rocky Mountains. The residence includes an almost 13,800 sq ft main house with a multitiered sundeck and partially subterranean level that connects to a two-story poolside structure.",
           price: 350,
         },
         {
@@ -61,7 +61,7 @@ module.exports = {
           lng: -80.1918,
           name: "South Beach Palace",
           description:
-            "Situated on the exclusive, gated La Gorce Island in Miami Beach, the Pearce compound boasts three homes — two two-story residences and a smaller one-story home with a guesthouse — each with its own private dock. In total, there are 12 bedrooms, 16 full bathrooms, nine half-bathrooms, and three swimming pools. The nearly three-acre property boasts statues of Greek gods and goddesses, opulent marble floors, handpainted frescos on the ceiling, crystal chandeliers, an extravagant Spanish-style courtyard, and 600 feet of frontage on Biscayne Bay with panoramic views of the Miami skyline. Not to mention a wine cellar, a vintage movie theater, and a private waterfront park on the property called 'Domaine de la Paix et de l’Amour' (French for 'Domain of Peace and Love'), decked out with manicured greenery and a waterfront gazebo.",
+            "Situated on the exclusive, gated La Gorce Island in Miami Beach, the Pearce compound boasts three homes — two two-story residences and a smaller one-story home with a guesthouse — each with its own private dock.",
           price: 689,
         },
       ],
