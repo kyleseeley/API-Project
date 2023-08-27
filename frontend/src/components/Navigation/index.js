@@ -18,7 +18,7 @@ function Navigation({ isLoaded }) {
       </li>
       <li className="create-spot-link">
         {isLoaded && sessionUser && (
-          <NavLink to="/create-spot">Create a New Spot</NavLink>
+          <NavLink to="/spots/new">Create a New Spot</NavLink>
         )}
       </li>
       <li className="profile-button-container">

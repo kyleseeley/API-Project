@@ -21,8 +21,6 @@ const SpotDetails = () => {
   const selectedSpot = useSelector((state) => state.spots.selectedSpot);
   const spotReviews = useSelector((state) => state.spots.reviews);
 
-  console.log("spotReviews", spotReviews);
-
   useEffect(() => {
     dispatch(fetchSpotDetails(id));
     dispatch(fetchSpotReviews(id));
@@ -57,10 +55,12 @@ const SpotDetails = () => {
     alert("Feature Coming Soon...");
   };
 
-  const mainImage = selectedSpot.SpotImages.find((image) => image.preview);
-  const otherImages = selectedSpot.SpotImages.filter((image) => !image.preview);
-  const hostFirstName = selectedSpot.Owner.firstName;
-  const hostLastName = selectedSpot.Owner.lastName;
+  const mainImage = selectedSpot?.SpotImages?.find((image) => image.preview);
+  const otherImages = selectedSpot?.SpotImages?.filter(
+    (image) => !image.preview
+  );
+  const hostFirstName = selectedSpot.Owner?.firstName;
+  const hostLastName = selectedSpot.Owner?.lastName;
 
   return (
     <div className="spot-details-container">
@@ -70,14 +70,16 @@ const SpotDetails = () => {
       </h3>
       <div className="images-container">
         <div className="main-image">
-          <img
-            src={mainImage.url}
-            alt={selectedSpot.name}
-            onClick={() => openPopout(mainImage)}
-          />
+          {mainImage && (
+            <img
+              src={mainImage.url}
+              alt={selectedSpot.name}
+              onClick={() => openPopout(mainImage)}
+            />
+          )}
         </div>
         <div className="other-images">
-          {otherImages.map((image) => (
+          {otherImages?.map((image) => (
             <img
               className="other-image"
               key={image.id}
@@ -141,7 +143,7 @@ const SpotDetails = () => {
         <p>No reviews available</p>
       )}
       {popoutImage && (
-        <div class="popout-overlay">
+        <div className="popout-overlay">
           <div className="popout" ref={popoutRef}>
             <div className="popout-content">
               <span className="close-popout" onClick={closePopout}>

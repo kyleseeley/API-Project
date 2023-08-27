@@ -15,18 +15,11 @@
   font-weight: bold;
   font-size: 18px;
   transition: color 0.2s;
-  /* position: relative; */
-  /* left: 2rem; */
 }
 
 .navigation-menu li a:hover {
   color: #007bff;
 }
-
-/* .navigation-menu.user-logged-in .create-spot-link {
-  margin-left: auto;
-  margin-right: 0.5rem;
-} */
 
 /* Style for the profile button container */
 .profile-button-container {
@@ -34,12 +27,6 @@
   display: flex;
   align-items: center;
 }
-/* .profile-button {
-  display: flex;
-  align-items: center;
-  position: relative;
-  right: 2rem;
-} */
 
 /* Style for the profile button icon */
 .profile-button i {
@@ -57,10 +44,14 @@
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  display: none;
+  /* display: none; */
   list-style-type: none;
   padding: 0;
   z-index: 2;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Show the dropdown menu when the profile button is clicked */
@@ -70,24 +61,15 @@
 
 /* Style for the dropdown menu items */
 .profile-dropdown li {
-  padding: 4px 10px;
+  padding: 4px 15px;
   white-space: nowrap;
-  cursor: pointer;
   margin: 10px 0;
-  /* display: flex; */
-  /* align-items: center; */
-}
-
-.profile-dropdown li::before {
-  content: "•";
-  margin-right: 5px;
-  color: black;
 }
 
 /* Style for the dropdown menu items on hover */
-.profile-dropdown li:hover {
+/* .profile-dropdown li:hover {
   background-color: #f0f0f0;
-}
+} */
 
 .hidden {
   display: none;
@@ -109,4 +91,44 @@
 
 .create-spot-link a:hover {
   color: darkred;
+}
+
+/* Style for the user info section */
+.user-info {
+  margin-bottom: 8px;
+  border-bottom: solid lightgray 1px;
+}
+
+/* Style for the manage spots link */
+.manage-spots-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: solid lightgray 1px;
+  cursor: pointer;
+}
+
+.manage-spots {
+  font-weight: normal;
+  margin-bottom: 8px;
+}
+
+.logout-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: lightskyblue;
+  transition: background-color 0.2s;
+  border-radius: 30px;
+}
+
+.logout-container {
+  display: flex;
+  justify-content: center;
+}
+
+.logout-link:hover {
+  background-color: #007bff;
+  cursor: pointer;
 }
