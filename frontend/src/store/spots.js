@@ -2,6 +2,7 @@ export const LOAD_SPOTS = "spots/LOAD_SPOTS";
 export const RECEIVE_SPOT = "spots/RECEIVE_SPOT";
 export const SPOT_REVIEWS = "/spots/SPOT_REVIEWS";
 export const CREATE_SPOT = "spots/CREATE_SPOT";
+export const ADD_SPOT_IMAGES = "spots/ADD_SPOT_IMAGES";
 
 export const loadSpots = (spots) => ({
   type: LOAD_SPOTS,
@@ -21,6 +22,12 @@ export const spotReviews = (reviews) => ({
 export const createSpot = (spotInfo) => ({
   type: CREATE_SPOT,
   spotInfo,
+});
+
+export const addSpotImages = (spotId, imageUrl) => ({
+  type: ADD_SPOT_IMAGES,
+  spotId,
+  imageUrl,
 });
 
 export const fetchSpots = () => async (dispatch) => {
@@ -92,6 +99,19 @@ export const createNewSpot = (spotInfo) => async (dispatch) => {
   }
 };
 
+export const addImagesToSpot = (spotId, images) => async (dispatch) => {
+  try {
+    const imagesWithStatus = images.map((image) => ({
+      url: image.url,
+      isPreview: image.isPreview,
+    }));
+
+    dispatch(addSpotImages(spotId, imagesWithStatus));
+  } catch (error) {
+    console.error("Error adding images to spot:", error);
+  }
+};
+
 const initialState = {
   spots: [],
   selectedSpot: null,
@@ -108,6 +128,23 @@ const spotsReducer = (state = initialState, action) => {
       return { ...state, reviews: Object.values(action.reviews) };
     case CREATE_SPOT:
       return { ...state, spots: [...state.spots, action.spotInfo] };
+    case ADD_SPOT_IMAGES:
+      const { spotId, images } = action;
+      const updatedSpots = state.spots.map((spot) =>
+        spot.id === spotId
+          ? {
+              ...spot,
+              SpotImages: [
+                ...spot.SpotImages,
+                ...images.map((image) => ({
+                  url: image.url,
+                  preview: image.isPreview,
+                })),
+              ],
+            }
+          : spot
+      );
+      return { ...state, spots: updatedSpots };
     default:
       return state;
   }
