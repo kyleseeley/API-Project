@@ -1,3 +1,5 @@
+import { csrfFetch } from "./csrf";
+
 export const LOAD_SPOTS = "spots/LOAD_SPOTS";
 export const RECEIVE_SPOT = "spots/RECEIVE_SPOT";
 export const SPOT_REVIEWS = "/spots/SPOT_REVIEWS";
@@ -72,20 +74,23 @@ export const fetchSpotReviews = (spotId) => async (dispatch) => {
 
 export const createNewSpot = (spotInfo) => async (dispatch) => {
   try {
-    const response = await fetch("/api/spots/", {
+    console.log("before fetch", spotInfo);
+    const response = await csrfFetch("/api/spots", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(spotInfo),
     });
-
+    console.log("before if");
     if (!response.ok) {
       const data = await response.json();
+      console.log("data", data);
       throw new Error(data.message || "Error creating spot");
     }
-
+    console.log("response", response);
     const newSpot = await response.json();
+    console.log("newSpot before dispatch", newSpot);
     dispatch(createSpot(newSpot));
   } catch (error) {
     console.error("Error creating new spot:", error);

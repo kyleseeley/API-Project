@@ -1,6 +1,9 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { createNewSpot } from "../../store/spots";
+import * as sessionActions from "../../store/session";
+// import { csrfFetch } from "../../store/csrf";
 import "./CreateNewSpot.css";
 
 const CreateNewSpot = () => {
@@ -15,36 +18,210 @@ const CreateNewSpot = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [errors, setErrors] = useState({});
 
-  const ownerId = useSelector((state) => state.session.user.id);
+  const sessionUser = useSelector((state) => state.session.user);
+  //   const ownerId = sessionUser ? sessionUser.id : null;
+
+  const resetForm = () => {
+    setAddress("");
+    setCity("");
+    setState("");
+    setCountry("");
+    setLat("");
+    setLng("");
+    setName("");
+    setDescription("");
+    setPrice("");
+    // setPreviewImageUrl("");
+    // setImageUrl([]);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setErrors({});
 
-    // Create an object with the form data
-    const spotInfo = {
-      ownerId,
-      address,
-      city,
-      state,
-      country,
-      lat,
-      lng,
-      name,
-      description,
-      price,
-    };
+    if (sessionUser) {
+      const spotInfo = {
+        address,
+        city,
+        state,
+        country,
+        lat,
+        lng,
+        name,
+        description,
+        price,
+      };
 
-    dispatch(createNewSpot(spotInfo));
+      dispatch(createNewSpot(spotInfo));
+    }
   };
+
+  useEffect(() => {
+    resetForm();
+  }, []);
 
   return (
     <div className="create-spot-container">
-      <h2>Create a New Spot</h2>
+      <h2 className="main-header">Create a New Spot</h2>
       <form onSubmit={handleSubmit} className="create-spot-form">
-        {/* Input fields for each form field */}
-        {/* Remember to use the appropriate onChange handlers */}
-        {/* Submit button */}
+        <div className="section-header">
+          <h3>Where's your place located?</h3>
+          <p>
+            Guests will only get your exact address once they booked a
+            reservation.
+          </p>
+          <div className="located-input-group">
+            <label className="form-input-label">Country</label>
+            <input
+              className="form-input"
+              type="text"
+              placeholder="Country"
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              //   required
+            />
+            {errors.country && (
+              <p className="error-message">{errors.country}</p>
+            )}
+            <label className="form-input-label">Street Address</label>
+            <input
+              className="form-input"
+              type="text"
+              placeholder="Address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
+            {errors.address && (
+              <p className="error-message">{errors.address}</p>
+            )}
+            <div className="input-row">
+              <div className="input-column">
+                <label className="form-input-label">City</label>
+                <input
+                  className="form-input"
+                  type="text"
+                  placeholder="City"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                />
+              </div>
+              {errors.city && <p className="error-message">{errors.city}</p>}
+              <div className="input-column">
+                <label className="form-input-label">State</label>
+                <input
+                  className="form-input"
+                  type="text"
+                  placeholder="State"
+                  value={state}
+                  onChange={(e) => setState(e.target.value)}
+                />
+              </div>
+              {errors.state && <p className="error-message">{errors.state}</p>}
+            </div>
+            <div className="input-row">
+              <div className="input-column">
+                <label className="form-input-label">Latitude</label>
+                <input
+                  className="form-input"
+                  type="text"
+                  placeholder="Latitude"
+                  value={lat}
+                  onChange={(e) => setLat(e.target.value)}
+                />
+              </div>
+              {errors.lat && <p className="error-message">{errors.lat}</p>}
+              <div className="input-column">
+                <label className="form-input-label">Longitude</label>
+                <input
+                  className="form-input"
+                  type="text"
+                  placeholder="Longitude"
+                  value={lng}
+                  onChange={(e) => setLng(e.target.value)}
+                />
+              </div>
+              {errors.lng && <p className="error-message">{errors.lng}</p>}
+            </div>
+          </div>
+        </div>
+        <div className="section-header">
+          <h3>Describe your place to guests</h3>
+          <p>
+            Mention the best features of your space, any special amentities like
+            fast wifi or parking, and what you love about the neighborhood.
+          </p>
+          <textarea
+            className="description-text"
+            type="text"
+            placeholder="Please write at least 30 characters"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </div>
+        <div className="section-header">
+          <h3>Create a title for your spot</h3>
+          <p>
+            Catch guests' attention with a spot title that highlights what makes
+            your place special
+          </p>
+          <input
+            className="form-input"
+            type="text"
+            placeholder="Name of your spot"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+        <div className="section-header">
+          <h3>Set a base price for your spot</h3>
+          <p>
+            Competetive pricing can help your listing stand out and rank higher
+            in search results.
+          </p>
+          <div className="price-input-container">
+            <span className="dollar-sign">$</span>
+            <input
+              className="form-input price-input"
+              type="text"
+              placeholder="Price per night (USD)"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+            />
+          </div>
+        </div>
+        {/* <div className="section-header">
+          <h3>Liven up your spot with photos</h3>
+          <p>Submit a link to at least one photo to publish your spot</p>
+          <input
+            className="form-input"
+            type="text"
+            placeholder="Preview Image URL"
+            value={previewImageUrl}
+            onChange={(e) => setPreviewImageUrl(e.target.value)}
+          />
+          {imageUrl.map((url, index) => (
+            <input
+              key={index}
+              className="form-input"
+              type="text"
+              placeholder={`Image URL`}
+              value={url}
+              onChange={(e) => {
+                const updatedUrls = [...imageUrl];
+                updatedUrls[index] = e.target.value;
+                setImageUrl(updatedUrls);
+              }}
+            />
+          ))}
+          <button className="add-image" type="button" onClick={handleImageAdd}>
+            Add Image
+          </button>
+        </div> */}
+        <button type="submit" className="create-spot-button">
+          Create Spot
+        </button>
       </form>
     </div>
   );
