@@ -65,15 +65,13 @@ function App() {
   return (
     <>
       <Navigation isLoaded={isLoaded} />
-
-      {/* Render content based on userRestored */}
-      {userRestored && (
-        <Switch>
-          <Route exact path="/" component={LandingPage} />
-          <Route path="/spots/new" component={CreateNewSpot} />
-          <Route path="/spots/:id" component={SpotDetails} />
-        </Switch>
-      )}
+      {/* {userRestored && ( */}
+      <Switch>
+        <Route exact path="/" component={LandingPage} />
+        <Route path="/spots/new" component={CreateNewSpot} />
+        <Route path="/spots/:id" component={SpotDetails} />
+      </Switch>
+      {/* )} */}
     </>
   );
 }

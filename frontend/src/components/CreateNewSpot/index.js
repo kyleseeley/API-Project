@@ -1,6 +1,9 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useState } from "react";
-import { createNewSpot, addImagesToSpot } from "../../store/spots";
+import { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { createNewSpot } from "../../store/spots";
+import * as sessionActions from "../../store/session";
+// import { csrfFetch } from "../../store/csrf";
 import "./CreateNewSpot.css";
 
 const CreateNewSpot = () => {
@@ -15,17 +18,37 @@ const CreateNewSpot = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
-  const [previewImageUrl, setPreviewImageUrl] = useState("");
-  const [imageUrl, setImageUrl] = useState([]);
+  const [errors, setErrors] = useState({
+    country: "",
+    address: "",
+    city: "",
+    state: "",
+    lat: "",
+    lng: "",
+    name: "",
+    description: "",
+    price: "",
+  });
 
-  const ownerId = useSelector((state) => state.session.user.id);
+  const resetForm = () => {
+    setAddress("");
+    setCity("");
+    setState("");
+    setCountry("");
+    setLat("");
+    setLng("");
+    setName("");
+    setDescription("");
+    setPrice("");
+    // setPreviewImageUrl("");
+    // setImageUrl([]);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors({});
 
-    // Create an object with the form data
     const spotInfo = {
-      ownerId,
       address,
       city,
       state,
@@ -37,24 +60,52 @@ const CreateNewSpot = () => {
       price,
     };
 
-    const newSpot = await dispatch(createNewSpot(spotInfo));
-
-    // After creating the spot, add images to the spot using the API
-    if (newSpot.id && imageUrl.length > 0) {
-      const newImages = imageUrl.map((url, index) => ({
-        url,
-        preview: index === 0,
-      }));
-      newImages[0].preview = true;
-      await Promise.all(
-        newImages.map((image) => dispatch(addImagesToSpot(newSpot.id, image)))
-      );
-    }
+    dispatch(createNewSpot(spotInfo))
+      .then()
+      .catch(async (res) => {
+        const data = await res.json();
+        console.log("data", data);
+        if (data && data.message) {
+          setErrors({
+            country: data.errors.country || "",
+            address: data.errors.address || "",
+            city: data.errors.city || "",
+            state: data.errors.state || "",
+            lat: data.errors.lat || "",
+            lng: data.errors.lng || "",
+            name: data.errors.name || "",
+            description: data.errors.description || "",
+            price: data.errors.price || "",
+          });
+        }
+      });
+    // try {
+    //   dispatch(createNewSpot(spotInfo));
+    //   //   resetForm(); // Move resetForm() here
+    // } catch (error) {
+    //   console.error("Error after catch:", error);
+    //   if (error.response && error.response.data && error.response.data.errors) {
+    //     const responseData = error.response.data.errors;
+    //     setErrors({
+    //       country: responseData.country || "",
+    //       address: responseData.address || "",
+    //       city: responseData.city || "",
+    //       state: responseData.state || "",
+    //       lat: responseData.lat || "",
+    //       lng: responseData.lng || "",
+    //       name: responseData.name || "",
+    //       description: responseData.description || "",
+    //       price: responseData.price || "",
+    //     });
+    //   } else {
+    //     console.error("Error after else:", error);
+    //   }
+    // }
   };
 
-  const handleImageAdd = () => {
-    setImageUrl([...imageUrl, ""]);
-  };
+  useEffect(() => {
+    resetForm();
+  }, []);
 
   return (
     <div className="create-spot-container">
@@ -74,8 +125,11 @@ const CreateNewSpot = () => {
               placeholder="Country"
               value={country}
               onChange={(e) => setCountry(e.target.value)}
-              required
+              //   required
             />
+            {errors.country && (
+              <p className="error-message">{errors.country}</p>
+            )}
             <label className="form-input-label">Street Address</label>
             <input
               className="form-input"
@@ -83,8 +137,10 @@ const CreateNewSpot = () => {
               placeholder="Address"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              required
             />
+            {errors.address && (
+              <p className="error-message">{errors.address}</p>
+            )}
             <div className="input-row">
               <div className="input-column">
                 <label className="form-input-label">City</label>
@@ -94,8 +150,8 @@ const CreateNewSpot = () => {
                   placeholder="City"
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  required
                 />
+                {errors.city && <p className="error-message">{errors.city}</p>}
               </div>
               <div className="input-column">
                 <label className="form-input-label">State</label>
@@ -105,8 +161,10 @@ const CreateNewSpot = () => {
                   placeholder="State"
                   value={state}
                   onChange={(e) => setState(e.target.value)}
-                  required
                 />
+                {errors.state && (
+                  <p className="error-message">{errors.state}</p>
+                )}
               </div>
             </div>
             <div className="input-row">
@@ -119,6 +177,7 @@ const CreateNewSpot = () => {
                   value={lat}
                   onChange={(e) => setLat(e.target.value)}
                 />
+                {errors.lat && <p className="error-message">{errors.lat}</p>}
               </div>
               <div className="input-column">
                 <label className="form-input-label">Longitude</label>
@@ -129,6 +188,7 @@ const CreateNewSpot = () => {
                   value={lng}
                   onChange={(e) => setLng(e.target.value)}
                 />
+                {errors.lng && <p className="error-message">{errors.lng}</p>}
               </div>
             </div>
           </div>
@@ -146,6 +206,9 @@ const CreateNewSpot = () => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
+          {errors.description && (
+            <p className="error-message">{errors.description}</p>
+          )}
         </div>
         <div className="section-header">
           <h3>Create a title for your spot</h3>
@@ -160,8 +223,27 @@ const CreateNewSpot = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
+          {errors.name && <p className="error-message">{errors.name}</p>}
         </div>
         <div className="section-header">
+          <h3>Set a base price for your spot</h3>
+          <p>
+            Competetive pricing can help your listing stand out and rank higher
+            in search results.
+          </p>
+          <div className="price-input-container">
+            <span className="dollar-sign">$</span>
+            <input
+              className="form-input price-input"
+              type="text"
+              placeholder="Price per night (USD)"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+            />
+          </div>
+          {errors.price && <p className="error-message">{errors.price}</p>}
+        </div>
+        {/* <div className="section-header">
           <h3>Liven up your spot with photos</h3>
           <p>Submit a link to at least one photo to publish your spot</p>
           <input
@@ -185,10 +267,13 @@ const CreateNewSpot = () => {
               }}
             />
           ))}
-          <button type="button" onClick={handleImageAdd}>
+          <button className="add-image" type="button" onClick={handleImageAdd}>
             Add Image
           </button>
-        </div>
+        </div> */}
+        <button type="submit" className="create-spot-button">
+          Create Spot
+        </button>
       </form>
     </div>
   );

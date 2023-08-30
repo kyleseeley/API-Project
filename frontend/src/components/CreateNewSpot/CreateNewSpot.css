@@ -40,7 +40,7 @@
   background-color: lightskyblue;
   font-family: inherit;
   font-size: 14px;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 }
 
 .input-row {
@@ -65,4 +65,44 @@
   border-radius: 4px;
   background-color: lightskyblue;
   margin-bottom: 10px;
+}
+
+.create-spot-button {
+  display: block;
+  margin: 0 auto;
+  margin-top: 20px;
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 3px 3px 3px black;
+  margin-bottom: 20px;
+}
+
+.add-image {
+  margin-bottom: 10px;
+}
+
+.create-spot-button:hover {
+  background-color: darkred;
+}
+
+.error-message {
+  color: #ff3333;
+  font-size: 14px;
+  margin-top: 3px;
+  /* text-align: center; */
+}
+
+.price-input-container {
+  display: flex;
+  align-items: baseline;
+}
+
+.dollar-sign {
+  font-size: 18px;
+  margin-right: 5px;
+  vertical-align: top;
 }
