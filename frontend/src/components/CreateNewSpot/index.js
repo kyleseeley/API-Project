@@ -8,6 +8,7 @@ import "./CreateNewSpot.css";
 
 const CreateNewSpot = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
@@ -85,7 +86,7 @@ const CreateNewSpot = () => {
           imageUrl3,
           imageUrl4,
           imageUrl5,
-        ].filter((url) => isValidImageUrl(url)); // Filter out invalid URLs
+        ].filter((url) => url && isValidImageUrl(url)); // Filter out invalid URLs
 
         // Dispatch createSpotImages action
         dispatch(createSpotImages(createdSpotId, imageUrls))
@@ -94,6 +95,7 @@ const CreateNewSpot = () => {
             // Handle image upload errors if needed
             console.error("Image upload errors:", imageErrors);
           });
+        history.push(`/spots/${createdSpotId}`);
       })
       .catch(async (res) => {
         const data = await res.json();
