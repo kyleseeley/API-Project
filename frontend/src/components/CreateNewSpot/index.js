@@ -90,17 +90,24 @@ const CreateNewSpot = () => {
 
         // Dispatch createSpotImages action
         dispatch(createSpotImages(createdSpotId, imageUrls))
-          .then(() => resetForm())
+          .then(() => {
+            console.log("Images successfully uploaded");
+            resetForm();
+          })
           .catch((imageErrors) => {
-            // Handle image upload errors if needed
             console.error("Image upload errors:", imageErrors);
           });
+        console.log(
+          "Redirecting to spot details page:",
+          `/spots/${createdSpotId}`
+        );
         history.push(`/spots/${createdSpotId}`);
       })
       .catch(async (res) => {
+        console.error("Error response from createNewSpot:", res);
         const data = await res.json();
         if (data && data.message) {
-          setErrors({
+          const errorFields = {
             country: data.errors.country || "",
             address: data.errors.address || "",
             city: data.errors.city || "",
@@ -111,12 +118,38 @@ const CreateNewSpot = () => {
             description: data.errors.description || "",
             price: data.errors.price || "",
             previewImageUrl: "Preview Image is required" || "",
-            imageUrl1: "Image URL must end in .png, .jpg, or .jpeg" || "",
-            imageUrl2: "Image URL must end in .png, .jpg, or .jpeg" || "",
-            imageUrl3: "Image URL must end in .png, .jpg, or .jpeg" || "",
-            imageUrl4: "Image URL must end in .png, .jpg, or .jpeg" || "",
-            imageUrl5: "Image URL must end in .png, .jpg, or .jpeg" || "",
-          });
+          };
+
+          // Check if the image URLs are valid, and set errors accordingly
+          if (imageUrl1 && !isValidImageUrl(imageUrl1)) {
+            errorFields.imageUrl1 =
+              "Image URL must end in .png, .jpg, or .jpeg";
+          }
+          if (imageUrl2 && !isValidImageUrl(imageUrl2)) {
+            errorFields.imageUrl2 =
+              "Image URL must end in .png, .jpg, or .jpeg";
+          }
+          if (imageUrl3 && !isValidImageUrl(imageUrl3)) {
+            errorFields.imageUrl3 =
+              "Image URL must end in .png, .jpg, or .jpeg";
+          }
+          if (imageUrl4 && !isValidImageUrl(imageUrl4)) {
+            errorFields.imageUrl4 =
+              "Image URL must end in .png, .jpg, or .jpeg";
+          }
+          if (imageUrl5 && !isValidImageUrl(imageUrl5)) {
+            errorFields.imageUrl5 =
+              "Image URL must end in .png, .jpg, or .jpeg";
+          }
+
+          if (previewImageUrl && !isValidImageUrl(previewImageUrl)) {
+            errorFields.previewImageUrl =
+              "Image URL must end in .png, .jpg, or .jpeg";
+          } else if (!previewImageUrl) {
+            errorFields.previewImageUrl = "Preview Image is required";
+          }
+
+          setErrors(errorFields);
         }
       });
   };

@@ -101,13 +101,12 @@ export const createNewSpot = (spotInfo) => async (dispatch) => {
 
   if (!response.ok) {
     const data = await response.json();
-    console.log("data", data);
     throw new Error(data.message || "Error creating spot");
   }
 
-  const newSpot = await response.json();
-  console.log("newSpot before dispatch", newSpot);
-  dispatch(createSpot(newSpot));
+  const newSpotData = await response.json();
+  console.log("newSpotData before dispatch", newSpotData);
+  dispatch(createSpot(newSpotData));
 };
 
 export const createSpotImages = (spotId, url, preview) => async (dispatch) => {
