@@ -26,10 +26,9 @@ export const createSpot = (spotInfo) => ({
   spotInfo,
 });
 
-export const addSpotImages = (spotId, imageUrl) => ({
+export const addSpotImages = (spotId, url, preview) => ({
   type: ADD_SPOT_IMAGES,
-  spotId,
-  imageUrl,
+  payload: { spotId, url, preview },
 });
 
 export const fetchSpots = () => async (dispatch) => {
@@ -111,16 +110,15 @@ export const createNewSpot = (spotInfo) => async (dispatch) => {
   dispatch(createSpot(newSpot));
 };
 
-export const addImagesToSpot = (spotId, images) => async (dispatch) => {
-  try {
-    const imagesWithStatus = images.map((image) => ({
-      url: image.url,
-      isPreview: image.isPreview,
-    }));
-
-    dispatch(addSpotImages(spotId, imagesWithStatus));
-  } catch (error) {
-    console.error("Error adding images to spot:", error);
+export const createSpotImages = (spotId, url, preview) => async (dispatch) => {
+  const response = await csrfFetch(`/api/spots/${spotId}/images`, {
+    method: "POST",
+    body: JSON.stringify({ url, preview }),
+    headers: { "Content-Type": "application/json" },
+  });
+  if (response.ok) {
+    const data = await response.json();
+    dispatch(addSpotImages(spotId, data.url, data.preview));
   }
 };
 
@@ -140,23 +138,23 @@ const spotsReducer = (state = initialState, action) => {
       return { ...state, reviews: Object.values(action.reviews) };
     case CREATE_SPOT:
       return { ...state, spots: [...state.spots, action.spotInfo] };
-    case ADD_SPOT_IMAGES:
-      const { spotId, images } = action;
-      const updatedSpots = state.spots.map((spot) =>
-        spot.id === spotId
-          ? {
-              ...spot,
-              SpotImages: [
-                ...spot.SpotImages,
-                ...images.map((image) => ({
-                  url: image.url,
-                  preview: image.isPreview,
-                })),
-              ],
-            }
-          : spot
-      );
-      return { ...state, spots: updatedSpots };
+    case ADD_SPOT_IMAGES: {
+      const { spotId, url, preview } = action.payload;
+      const updatedSpots = state.spots.map((spot) => {
+        if (spot.id === spotId) {
+          return {
+            ...spot,
+            imageUrls: [...spot.imageUrls, url],
+            preview: preview,
+          };
+        }
+        return spot;
+      });
+      return {
+        ...state,
+        spots: updatedSpots,
+      };
+    }
     default:
       return state;
   }
