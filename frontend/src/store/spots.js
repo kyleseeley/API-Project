@@ -38,8 +38,10 @@ export const fetchSpots = () => async (dispatch) => {
     if (!response.ok) {
       throw new Error("Error fetching spots");
     }
-    const spots = await response.json();
-    dispatch(loadSpots(spots));
+    const responseData = await response.json();
+    const spots = responseData.Spots;
+
+    dispatch(loadSpots(responseData));
   } catch (error) {
     console.log("Error fetching spots", error);
   }
@@ -105,8 +107,12 @@ export const createNewSpot = (spotInfo) => async (dispatch) => {
   }
 
   const newSpotData = await response.json();
-  console.log("newSpotData before dispatch", newSpotData);
+
   dispatch(createSpot(newSpotData));
+
+  dispatch(fetchSpots());
+
+  return newSpotData;
 };
 
 export const createSpotImages = (spotId, url, preview) => async (dispatch) => {

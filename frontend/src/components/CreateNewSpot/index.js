@@ -1,9 +1,8 @@
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { createNewSpot, createSpotImages } from "../../store/spots";
-import * as sessionActions from "../../store/session";
-// import { csrfFetch } from "../../store/csrf";
+// import * as sessionActions from "../../store/session";
 import "./CreateNewSpot.css";
 
 const CreateNewSpot = () => {
@@ -21,17 +20,17 @@ const CreateNewSpot = () => {
   const [price, setPrice] = useState("");
   const [errors, setErrors] = useState({});
   const [previewImageUrl, setPreviewImageUrl] = useState("");
-  const [isPreviewImage, setIsPreviewImage] = useState(false);
+  //   const [isPreviewImage, setIsPreviewImage] = useState(false);
   const [imageUrl1, setImageUrl1] = useState("");
   const [imageUrl2, setImageUrl2] = useState("");
   const [imageUrl3, setImageUrl3] = useState("");
   const [imageUrl4, setImageUrl4] = useState("");
   const [imageUrl5, setImageUrl5] = useState("");
-  const [imageUrlError1, setImageUrlError1] = useState("");
-  const [imageUrlError2, setImageUrlError2] = useState("");
-  const [imageUrlError3, setImageUrlError3] = useState("");
-  const [imageUrlError4, setImageUrlError4] = useState("");
-  const [imageUrlError5, setImageUrlError5] = useState("");
+  //   const [imageUrlError1, setImageUrlError1] = useState("");
+  //   const [imageUrlError2, setImageUrlError2] = useState("");
+  //   const [imageUrlError3, setImageUrlError3] = useState("");
+  //   const [imageUrlError4, setImageUrlError4] = useState("");
+  //   const [imageUrlError5, setImageUrlError5] = useState("");
 
   const resetForm = () => {
     setAddress("");
@@ -62,6 +61,33 @@ const CreateNewSpot = () => {
     e.preventDefault();
     setErrors({});
 
+    // Validate the Preview Image URL
+    if (!isValidImageUrl(previewImageUrl)) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        previewImageUrl: "Preview Image URL must be valid",
+      }));
+      return;
+    }
+
+    // Validate the other image URLs
+    const imageUrls = [imageUrl1, imageUrl2, imageUrl3, imageUrl4, imageUrl5];
+    const invalidImageUrls = imageUrls.filter(
+      (url) => url && !isValidImageUrl(url)
+    );
+
+    if (invalidImageUrls.length > 0) {
+      const imageErrors = {};
+      invalidImageUrls.forEach((url, index) => {
+        imageErrors[`imageUrl${index + 1}`] = "Image URL must be valid";
+      });
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        ...imageErrors,
+      }));
+      return;
+    }
+
     const spotInfo = {
       address,
       city,
@@ -76,6 +102,7 @@ const CreateNewSpot = () => {
 
     dispatch(createNewSpot(spotInfo))
       .then((createdSpot) => {
+        console.log("Created spot object:", createdSpot);
         // Extract the created spot ID from the response if needed
         const createdSpotId = createdSpot.id;
 
@@ -105,7 +132,12 @@ const CreateNewSpot = () => {
       })
       .catch(async (res) => {
         console.error("Error response from createNewSpot:", res);
-        const data = await res.json();
+        let data;
+        try {
+          data = await res.json();
+        } catch (jsonError) {
+          console.error("Error parsing JSON:", jsonError);
+        }
         if (data && data.message) {
           const errorFields = {
             country: data.errors.country || "",
