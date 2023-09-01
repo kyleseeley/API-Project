@@ -47,7 +47,7 @@ function LoginFormModal() {
   };
 
   return (
-    <>
+    <div className="root-container">
       <h1 className="form-title">Log In</h1>
       <form onSubmit={handleSubmit}>
         <div className="input-container">
@@ -75,7 +75,7 @@ function LoginFormModal() {
           </label>
         </div>
         {errors.credential && (
-          <p className="error-message">{errors.credential}</p>
+          <p className="error-message">The provided credentials were invalid</p>
         )}
         <button
           className="submit-button"
@@ -88,7 +88,7 @@ function LoginFormModal() {
           <span className="demo-link">Demo User</span>
         </div>
       </form>
-    </>
+    </div>
   );
 }
 

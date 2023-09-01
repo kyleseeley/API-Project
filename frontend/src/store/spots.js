@@ -5,6 +5,7 @@ export const RECEIVE_SPOT = "spots/RECEIVE_SPOT";
 export const SPOT_REVIEWS = "/spots/SPOT_REVIEWS";
 export const CREATE_SPOT = "spots/CREATE_SPOT";
 export const ADD_SPOT_IMAGES = "spots/ADD_SPOT_IMAGES";
+export const CREATE_REVIEW = "spots/CREATE_REVIEW";
 
 export const loadSpots = (spots) => ({
   type: LOAD_SPOTS,
@@ -127,6 +128,38 @@ export const createSpotImages = (spotId, url, preview) => async (dispatch) => {
   }
 };
 
+export const createReview = (reviewData) => async (dispatch) => {
+  try {
+    const response = await csrfFetch(
+      `/api/spots/${reviewData.spotId}/reviews`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          review: reviewData.review,
+          stars: reviewData.stars,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Error creating review");
+    }
+
+    const newReview = await response.json();
+
+    dispatch({
+      type: CREATE_REVIEW,
+      review: newReview,
+    });
+  } catch (error) {
+    console.log("Error creating review", error);
+    // Handle error
+  }
+};
+
 const initialState = {
   spots: [],
   selectedSpot: null,
@@ -161,6 +194,11 @@ const spotsReducer = (state = initialState, action) => {
         spots: updatedSpots,
       };
     }
+    case CREATE_REVIEW:
+      return {
+        ...state,
+        reviews: [...state.reviews, action.review],
+      };
     default:
       return state;
   }

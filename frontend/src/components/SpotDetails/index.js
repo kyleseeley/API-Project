@@ -1,7 +1,10 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState, useRef } from "react";
 import { fetchSpotDetails, fetchSpotReviews } from "../../store/spots";
+import ReviewModal from "../ReviewModal";
+import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
+import { useModal } from "../../context/Modal";
 import "./SpotDetails.css";
 
 const SpotDetails = () => {
@@ -9,6 +12,8 @@ const SpotDetails = () => {
   const dispatch = useDispatch();
   const popoutRef = useRef();
   const [popoutImage, setPopoutImage] = useState(null);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const { setModalContent } = useModal();
 
   const openPopout = (image) => {
     setPopoutImage(image);
@@ -19,7 +24,11 @@ const SpotDetails = () => {
   };
 
   const selectedSpot = useSelector((state) => state.spots.selectedSpot);
+  console.log("selectedSpot", selectedSpot);
   const spotReviews = useSelector((state) => state.spots.reviews);
+  console.log("spotReviews", spotReviews);
+  const currentUser = useSelector((state) => state.session.user);
+  console.log("currenUser", currentUser);
 
   useEffect(() => {
     dispatch(fetchSpotDetails(id));
@@ -100,7 +109,9 @@ const SpotDetails = () => {
             <p className="spot-price">${selectedSpot.price}/night</p>
             <p className="spot-avgRating">
               <i className="fa-solid fa-star"></i>
-              {selectedSpot.avgStarRating}
+              {selectedSpot.avgStarRating !== null
+                ? selectedSpot.avgStarRating
+                : "New"}
             </p>
             {spotReviews[0] ? (
               <p className="spot-numReviews">
@@ -120,10 +131,32 @@ const SpotDetails = () => {
         <div className="reviews">
           <h3 className="review-heading">
             <i className="fa-solid fa-star"></i>
-            {selectedSpot.avgStarRating} &nbsp; &middot; &nbsp;
+            {selectedSpot.avgStarRating !== null
+              ? selectedSpot.avgStarRating
+              : "New"}{" "}
+            &nbsp; &middot; &nbsp;
             {spotReviews[0].length}{" "}
             {spotReviews[0].length === 1 ? "review" : "reviews"}
           </h3>
+          {currentUser &&
+            selectedSpot &&
+            selectedSpot.ownerId !== currentUser.id &&
+            spotReviews[0] &&
+            !spotReviews[0].some(
+              (review) => review.User.id === currentUser.id
+            ) && (
+              <button className="post-review-button open-modal-menu-item">
+                <OpenModalMenuItem
+                  itemText="Post Your Review"
+                  modalComponent={
+                    <ReviewModal
+                      spotId={selectedSpot.id}
+                      onClose={() => setModalContent(null)}
+                    />
+                  }
+                />
+              </button>
+            )}
           {spotReviews[0].map((review) => (
             <div key={review.id} className="review-container">
               <div className="review-header">
