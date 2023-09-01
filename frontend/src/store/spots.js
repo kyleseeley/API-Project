@@ -123,6 +123,7 @@ export const createSpotImages = (spotId, url, preview) => async (dispatch) => {
   });
   if (response.ok) {
     const data = await response.json();
+    console.log("image data", data);
     dispatch(addSpotImages(spotId, data.url, data.preview));
   }
 };
@@ -147,9 +148,10 @@ const spotsReducer = (state = initialState, action) => {
       const { spotId, url, preview } = action.payload;
       const updatedSpots = state.spots.map((spot) => {
         if (spot.id === spotId) {
+          const updatedImageUrls = spot.imageUrls ? [...spot.imageUrls] : []; // Initialize or copy existing imageUrls
           return {
             ...spot,
-            imageUrls: [...spot.imageUrls, url],
+            imageUrls: [...updatedImageUrls, url], // Append new URL to the array
             preview: preview,
           };
         }

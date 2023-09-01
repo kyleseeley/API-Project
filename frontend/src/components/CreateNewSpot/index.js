@@ -20,7 +20,7 @@ const CreateNewSpot = () => {
   const [price, setPrice] = useState("");
   const [errors, setErrors] = useState({});
   const [previewImageUrl, setPreviewImageUrl] = useState("");
-  //   const [isPreviewImage, setIsPreviewImage] = useState(false);
+  const [isPreviewImage, setIsPreviewImage] = useState(false);
   const [imageUrl1, setImageUrl1] = useState("");
   const [imageUrl2, setImageUrl2] = useState("");
   const [imageUrl3, setImageUrl3] = useState("");
@@ -108,6 +108,7 @@ const CreateNewSpot = () => {
 
         // Create an array of image URLs
         const imageUrls = [
+          previewImageUrl,
           imageUrl1,
           imageUrl2,
           imageUrl3,
@@ -115,20 +116,20 @@ const CreateNewSpot = () => {
           imageUrl5,
         ].filter((url) => url && isValidImageUrl(url)); // Filter out invalid URLs
 
-        // Dispatch createSpotImages action
-        dispatch(createSpotImages(createdSpotId, imageUrls))
+        const imagePromises = imageUrls.map((url) => {
+          const isPreview = isPreviewImage && url === previewImageUrl;
+          return dispatch(createSpotImages(createdSpotId, url, isPreview));
+        });
+
+        Promise.all(imagePromises)
           .then(() => {
             console.log("Images successfully uploaded");
             resetForm();
+            history.push(`/spots/${createdSpotId}`);
           })
           .catch((imageErrors) => {
             console.error("Image upload errors:", imageErrors);
           });
-        console.log(
-          "Redirecting to spot details page:",
-          `/spots/${createdSpotId}`
-        );
-        history.push(`/spots/${createdSpotId}`);
       })
       .catch(async (res) => {
         console.error("Error response from createNewSpot:", res);
@@ -194,15 +195,16 @@ const CreateNewSpot = () => {
     setErrors((prevErrors) => {
       const updatedErrors = { ...prevErrors };
 
-      if (field === "previewImageUrl" || field.startsWith("imageUrl")) {
-        const index = parseInt(field.split("-")[1]);
-
+      if (field === "previewImageUrl") {
         if (value && !isValidImageUrl(value)) {
           updatedErrors[field] = "Image URL must end in .png, .jpg, or .jpeg";
-
-          // Clear the corresponding imageUrlError field
-          const imageUrlErrorField = `imageUrlError${index}`;
-          updatedErrors[imageUrlErrorField] = "";
+        } else {
+          updatedErrors[field] = "";
+        }
+        setIsPreviewImage(!!value); // Set preview flag for all images
+      } else if (field.startsWith("imageUrl")) {
+        if (value && !isValidImageUrl(value)) {
+          updatedErrors[field] = "Image URL must end in .png, .jpg, or .jpeg";
         } else {
           updatedErrors[field] = "";
         }
@@ -213,10 +215,6 @@ const CreateNewSpot = () => {
       return updatedErrors;
     });
   };
-
-  //   const handleImageAdd = () => {
-  //     setImageUrl([...imageUrl, ""]);
-  //   };
 
   return (
     <div className="create-spot-container">
@@ -391,6 +389,7 @@ const CreateNewSpot = () => {
             value={previewImageUrl}
             onChange={(e) => {
               setPreviewImageUrl(e.target.value);
+              setIsPreviewImage(true);
               handleInputChange("previewImageUrl", e.target.value);
             }}
           />
