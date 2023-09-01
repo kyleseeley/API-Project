@@ -102,8 +102,6 @@ const CreateNewSpot = () => {
 
     dispatch(createNewSpot(spotInfo))
       .then((createdSpot) => {
-        console.log("Created spot object:", createdSpot);
-        // Extract the created spot ID from the response if needed
         const createdSpotId = createdSpot.id;
 
         // Create an array of image URLs
@@ -123,7 +121,6 @@ const CreateNewSpot = () => {
 
         Promise.all(imagePromises)
           .then(() => {
-            console.log("Images successfully uploaded");
             resetForm();
             history.push(`/spots/${createdSpotId}`);
           })

@@ -59,7 +59,6 @@ const SpotDetails = () => {
   const otherImages = selectedSpot?.SpotImages?.filter(
     (image) => !image.preview
   );
-  console.log("SpotImages", selectedSpot.SpotImages);
   const hostFirstName = selectedSpot.Owner?.firstName;
   const hostLastName = selectedSpot.Owner?.lastName;
 

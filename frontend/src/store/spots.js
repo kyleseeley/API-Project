@@ -123,7 +123,6 @@ export const createSpotImages = (spotId, url, preview) => async (dispatch) => {
   });
   if (response.ok) {
     const data = await response.json();
-    console.log("image data", data);
     dispatch(addSpotImages(spotId, data.url, data.preview));
   }
 };

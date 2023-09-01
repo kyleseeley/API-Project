@@ -24,6 +24,14 @@
   text-align: center;
 }
 
+.input-container {
+  text-align: center;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
 /* Input fields */
 .form-input {
   width: 100%;
@@ -39,9 +47,6 @@
   margin-bottom: 8px;
   font-weight: bold;
   text-align: center;
-  width: 80%;
-  margin: 0 auto;
-  display: block;
 }
 
 /* Error message */
