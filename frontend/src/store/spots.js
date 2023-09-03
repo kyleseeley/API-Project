@@ -154,6 +154,7 @@ export const createReview = (reviewData) => async (dispatch) => {
       type: CREATE_REVIEW,
       review: newReview,
     });
+    dispatch(fetchSpotReviews(reviewData.spotId));
   } catch (error) {
     console.log("Error creating review", error);
     // Handle error

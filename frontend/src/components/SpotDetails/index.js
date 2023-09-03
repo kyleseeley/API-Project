@@ -24,16 +24,14 @@ const SpotDetails = () => {
   };
 
   const selectedSpot = useSelector((state) => state.spots.selectedSpot);
-  console.log("selectedSpot", selectedSpot);
   const spotReviews = useSelector((state) => state.spots.reviews);
   console.log("spotReviews", spotReviews);
   const currentUser = useSelector((state) => state.session.user);
-  console.log("currenUser", currentUser);
 
   useEffect(() => {
     dispatch(fetchSpotDetails(id));
     dispatch(fetchSpotReviews(id));
-  }, [dispatch, id]);
+  }, [dispatch, fetchSpotReviews, id]);
 
   const isClickInsidePopout = (event) => {
     if (popoutRef.current && popoutRef.current.contains(event.target)) {
@@ -106,20 +104,21 @@ const SpotDetails = () => {
         <p className="description">{selectedSpot.description}</p>
         <div className="spot-info">
           <div className="spot-info-top">
-            <p className="spot-price">${selectedSpot.price}/night</p>
+            <p className="spot-price">${selectedSpot.price} night</p>
             <p className="spot-avgRating">
               <i className="fa-solid fa-star"></i>
               {selectedSpot.avgStarRating !== null
-                ? selectedSpot.avgStarRating
+                ? selectedSpot.avgStarRating.toFixed(1)
                 : "New"}
             </p>
-            {spotReviews[0] ? (
-              <p className="spot-numReviews">
-                {spotReviews[0].length}{" "}
-                {spotReviews[0].length === 1 ? "review" : "reviews"}
-              </p>
-            ) : (
-              <p>No reviews available</p>
+            {spotReviews[0] && spotReviews[0].length > 0 && (
+              <>
+                {"·"}
+                <p className="spot-numReviews">
+                  {spotReviews[0].length}{" "}
+                  {spotReviews[0].length === 1 ? "review" : "reviews"}
+                </p>
+              </>
             )}
           </div>
           <button className="reserve" onClick={handleReserveClick}>
@@ -132,7 +131,7 @@ const SpotDetails = () => {
           <h3 className="review-heading">
             <i className="fa-solid fa-star"></i>
             {selectedSpot.avgStarRating !== null
-              ? selectedSpot.avgStarRating
+              ? selectedSpot.avgStarRating.toFixed(1)
               : "New"}{" "}
             &nbsp; &middot; &nbsp;
             {spotReviews[0].length}{" "}
@@ -157,20 +156,22 @@ const SpotDetails = () => {
                 />
               </button>
             )}
-          {spotReviews[0].map((review) => (
-            <div key={review.id} className="review-container">
-              <div className="review-header">
-                <h4 className="review-name">{review.User.firstName}</h4>
-                <p className="review-date">
-                  {new Date(review.createdAt).toLocaleDateString("en-US", {
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </p>
+          {spotReviews[0]
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .map((review) => (
+              <div key={review.id} className="review-container">
+                <div className="review-header">
+                  <h4 className="review-name">{review.User.firstName}</h4>
+                  <p className="review-date">
+                    {new Date(review.createdAt).toLocaleDateString("en-US", {
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </p>
+                </div>
+                <p className="review">{review.review}</p>
               </div>
-              <p className="review">{review.review}</p>
-            </div>
-          ))}
+            ))}
         </div>
       ) : (
         <p>No reviews available</p>

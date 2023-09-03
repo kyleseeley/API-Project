@@ -37,11 +37,6 @@ module.exports = {
           preview: false,
         },
         {
-          spotId: 1,
-          url: "https://i.insider.com/5e4c48674b661b35b4566366?width=1000&format=jpeg&auto=webp",
-          preview: false,
-        },
-        {
           spotId: 2,
           url: "https://mlsandiegomag.com/get/files/image/galleries/9828LJFarms.jpg",
           preview: true,
@@ -99,31 +94,6 @@ module.exports = {
         {
           spotId: 4,
           url: "https://media2.miaminewtimes.com/mia/imager/u/blog/14471452/16_la_gorce_circle_1_67.jpg?cb=1690310506",
-          preview: false,
-        },
-        {
-          spotId: 4,
-          url: "https://oceandrive.com/get/files/image/galleries/16-La-Gorce_Circle-1-43.jpg",
-          preview: false,
-        },
-        {
-          spotId: 4,
-          url: "https://oceandrive.com/get/files/image/galleries/16-La-Gorce_Circle-1-47.jpg",
-          preview: false,
-        },
-        {
-          spotId: 4,
-          url: "https://oceandrive.com/get/files/image/galleries/16-La-Gorce_Circle-1-56.jpg",
-          preview: false,
-        },
-        {
-          spotId: 4,
-          url: "https://oceandrive.com/get/files/image/galleries/16-La-Gorce_Circle-1-57.jpg",
-          preview: false,
-        },
-        {
-          spotId: 4,
-          url: "https://oceandrive.com/get/files/image/galleries/16-La-Gorce_Circle-1-28.jpg",
           preview: false,
         },
       ],

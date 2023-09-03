@@ -33,10 +33,10 @@ const LandingPage = () => {
                     <p>
                       {city}, {state}
                     </p>
-                    <p>${price}/night</p>
+                    <p>${price} night</p>
                     <p className="avg-rating">
                       <i className="fa-solid fa-star"></i>
-                      {avgRating !== null ? avgRating : "New"}
+                      {avgRating !== null ? avgRating.toFixed(1) : "New"}
                     </p>
                   </div>
                   <div className="tooltip">{name}</div>

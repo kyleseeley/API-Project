@@ -1,7 +1,7 @@
 .spot-details-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* align-items: center; */
   max-width: 1000px;
   margin: 0 auto;
   padding: 16px;
@@ -56,6 +56,7 @@
 
 .details-container {
   display: flex;
+  width: 100%;
   flex-direction: row;
   align-items: flex-start;
   justify-content: space-between;
@@ -75,44 +76,49 @@
   padding: 8px;
   display: grid;
   grid-template-rows: auto 1fr;
-  gap: 16px;
   align-items: flex-start;
   width: 30%;
+  margin-right: 15px;
 }
 
 .spot-info-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: 0 5px;
 }
 
 .spot-price {
   font-weight: bold;
-  margin-bottom: 16px;
+  margin-right: 25px;
+  margin-left: 10px;
 }
 
 .spot-avgRating {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  margin-bottom: 16px;
 }
 
 .spot-numReviews {
   font-weight: bold;
-  margin-bottom: 16px;
+  /* margin-bottom: 8px; */
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
 }
 
 .reserve {
-  width: 80%;
+  width: 90%;
   margin: auto;
   background-color: red;
-  color: white; /* Set text color to white */
-  border: none; /* Remove the border */
+  color: white;
+  border: none;
   padding: 10px 0;
   text-align: center;
   box-shadow: 5px 3px 3px black;
   cursor: pointer;
+  border-radius: 5px;
 }
 
 .reserve:hover {

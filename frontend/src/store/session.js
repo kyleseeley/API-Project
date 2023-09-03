@@ -51,6 +51,7 @@ export const signup = (user) => async (dispatch) => {
     }),
   });
   const data = await response.json();
+  localStorage.setItem("token", data.token);
   dispatch(setUser(data));
   return response;
 };
