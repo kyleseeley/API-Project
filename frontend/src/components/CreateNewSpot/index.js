@@ -25,12 +25,6 @@ const CreateNewSpot = () => {
   const [imageUrl2, setImageUrl2] = useState("");
   const [imageUrl3, setImageUrl3] = useState("");
   const [imageUrl4, setImageUrl4] = useState("");
-  const [imageUrl5, setImageUrl5] = useState("");
-  //   const [imageUrlError1, setImageUrlError1] = useState("");
-  //   const [imageUrlError2, setImageUrlError2] = useState("");
-  //   const [imageUrlError3, setImageUrlError3] = useState("");
-  //   const [imageUrlError4, setImageUrlError4] = useState("");
-  //   const [imageUrlError5, setImageUrlError5] = useState("");
 
   const resetForm = () => {
     setAddress("");
@@ -48,7 +42,6 @@ const CreateNewSpot = () => {
     setImageUrl2("");
     setImageUrl3("");
     setImageUrl4("");
-    setImageUrl5("");
   };
 
   const isValidImageUrl = (url) => {
@@ -71,7 +64,7 @@ const CreateNewSpot = () => {
     }
 
     // Validate the other image URLs
-    const imageUrls = [imageUrl1, imageUrl2, imageUrl3, imageUrl4, imageUrl5];
+    const imageUrls = [imageUrl1, imageUrl2, imageUrl3, imageUrl4];
     const invalidImageUrls = imageUrls.filter(
       (url) => url && !isValidImageUrl(url)
     );
@@ -111,7 +104,6 @@ const CreateNewSpot = () => {
           imageUrl2,
           imageUrl3,
           imageUrl4,
-          imageUrl5,
         ].filter((url) => url && isValidImageUrl(url)); // Filter out invalid URLs
 
         const imagePromises = imageUrls.map((url) => {
@@ -165,10 +157,6 @@ const CreateNewSpot = () => {
           }
           if (imageUrl4 && !isValidImageUrl(imageUrl4)) {
             errorFields.imageUrl4 =
-              "Image URL must end in .png, .jpg, or .jpeg";
-          }
-          if (imageUrl5 && !isValidImageUrl(imageUrl5)) {
-            errorFields.imageUrl5 =
               "Image URL must end in .png, .jpg, or .jpeg";
           }
 
@@ -444,19 +432,6 @@ const CreateNewSpot = () => {
           />
           {errors.imageUrl4 && (
             <p className="error-message">{errors.imageUrl4}</p>
-          )}
-          <input
-            className="form-input"
-            type="text"
-            placeholder="Image URL"
-            value={imageUrl5}
-            onChange={(e) => {
-              setImageUrl5(e.target.value);
-              handleInputChange("imageUrl5", e.target.value);
-            }}
-          />
-          {errors.imageUrl5 && (
-            <p className="error-message">{errors.imageUrl5}</p>
           )}
         </div>
         <button type="submit" className="create-spot-button">
