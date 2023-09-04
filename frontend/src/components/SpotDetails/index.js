@@ -126,7 +126,7 @@ const SpotDetails = () => {
           </button>
         </div>
       </div>
-      {spotReviews[0] ? (
+      {spotReviews.length > 0 ? (
         <div className="reviews">
           <h3 className="review-heading">
             <i className="fa-solid fa-star"></i>
@@ -172,9 +172,21 @@ const SpotDetails = () => {
                 <p className="review">{review.review}</p>
               </div>
             ))}
+          {currentUser &&
+            selectedSpot &&
+            selectedSpot.ownerId !== currentUser.id &&
+            spotReviews[0].length === 0 && (
+              <p className="no-reviews-message">
+                Be the first to post your review!
+              </p>
+            )}
         </div>
+      ) : currentUser && selectedSpot.ownerId !== currentUser.id ? (
+        <>
+          <p className="no-reviews-message">Be the first to post a review!</p>
+        </>
       ) : (
-        <p>No reviews available</p>
+        <p className="no-reviews-message">No reviews available</p>
       )}
       {popoutImage && (
         <div className="popout-overlay">
