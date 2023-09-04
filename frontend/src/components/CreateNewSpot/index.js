@@ -25,6 +25,7 @@ const CreateNewSpot = () => {
   const [imageUrl2, setImageUrl2] = useState("");
   const [imageUrl3, setImageUrl3] = useState("");
   const [imageUrl4, setImageUrl4] = useState("");
+  const [showErrors, setShowErrors] = useState(false);
 
   const resetForm = () => {
     setAddress("");
@@ -37,7 +38,6 @@ const CreateNewSpot = () => {
     setDescription("");
     setPrice("");
     setPreviewImageUrl("");
-    // setImageUrl([]);
     setImageUrl1("");
     setImageUrl2("");
     setImageUrl3("");
@@ -52,13 +52,14 @@ const CreateNewSpot = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setShowErrors(true);
     setErrors({});
 
     // Validate the Preview Image URL
     if (!isValidImageUrl(previewImageUrl)) {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        previewImageUrl: "Preview Image URL must be valid",
+        previewImageUrl: "Preview Image is required",
       }));
       return;
     }
@@ -77,6 +78,79 @@ const CreateNewSpot = () => {
       setErrors((prevErrors) => ({
         ...prevErrors,
         ...imageErrors,
+      }));
+      return;
+    }
+
+    if (!country) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        country: "Country is required",
+      }));
+      return;
+    }
+
+    if (!address) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        address: "Street Address is required",
+      }));
+      return;
+    }
+
+    if (!city) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        city: "City is required",
+      }));
+      return;
+    }
+
+    if (!state) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        state: "State is required",
+      }));
+      return;
+    }
+
+    if (!lat) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        lat: "Latitude is required",
+      }));
+      return;
+    }
+
+    if (!lng) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        lng: "Longitude is required",
+      }));
+      return;
+    }
+
+    if (!name) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        name: "Name of your spot is required",
+      }));
+      return;
+    }
+
+    if (!description || description.length < 30) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        description:
+          "Description is required and should be at least 30 characters",
+      }));
+      return;
+    }
+
+    if (!price) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        price: "Price per night is required",
       }));
       return;
     }
@@ -129,6 +203,8 @@ const CreateNewSpot = () => {
           console.error("Error parsing JSON:", jsonError);
         }
         if (data && data.message) {
+          console.log("data", data);
+          console.log("message", data.message);
           const errorFields = {
             country: data.errors.country || "",
             address: data.errors.address || "",
@@ -142,32 +218,9 @@ const CreateNewSpot = () => {
             previewImageUrl: "Preview Image is required" || "",
           };
 
-          // Check if the image URLs are valid, and set errors accordingly
-          if (imageUrl1 && !isValidImageUrl(imageUrl1)) {
-            errorFields.imageUrl1 =
-              "Image URL must end in .png, .jpg, or .jpeg";
-          }
-          if (imageUrl2 && !isValidImageUrl(imageUrl2)) {
-            errorFields.imageUrl2 =
-              "Image URL must end in .png, .jpg, or .jpeg";
-          }
-          if (imageUrl3 && !isValidImageUrl(imageUrl3)) {
-            errorFields.imageUrl3 =
-              "Image URL must end in .png, .jpg, or .jpeg";
-          }
-          if (imageUrl4 && !isValidImageUrl(imageUrl4)) {
-            errorFields.imageUrl4 =
-              "Image URL must end in .png, .jpg, or .jpeg";
-          }
-
-          if (previewImageUrl && !isValidImageUrl(previewImageUrl)) {
-            errorFields.previewImageUrl =
-              "Image URL must end in .png, .jpg, or .jpeg";
-          } else if (!previewImageUrl) {
-            errorFields.previewImageUrl = "Preview Image is required";
-          }
-
           setErrors(errorFields);
+          console.log(errorFields);
+          setShowErrors(true);
         }
       });
   };
@@ -186,17 +239,63 @@ const CreateNewSpot = () => {
         } else {
           updatedErrors[field] = "";
         }
-        setIsPreviewImage(!!value); // Set preview flag for all images
+        setIsPreviewImage(!!value);
       } else if (field.startsWith("imageUrl")) {
         if (value && !isValidImageUrl(value)) {
           updatedErrors[field] = "Image URL must end in .png, .jpg, or .jpeg";
         } else {
           updatedErrors[field] = "";
         }
-      } else {
-        updatedErrors[field] = "";
+      } else if (field === "country") {
+        if (!value) {
+          updatedErrors.country = "Country is required";
+        } else {
+          updatedErrors.country = "";
+        }
+      } else if (field === "address") {
+        if (!value) {
+          updatedErrors.address = "Address is required";
+        } else {
+          updatedErrors.address = "";
+        }
+      } else if (field === "city") {
+        if (!value) {
+          updatedErrors.city = "City is required";
+        } else {
+          updatedErrors.city = "";
+        }
+      } else if (field === "state") {
+        if (!value) {
+          updatedErrors.state = "State is required";
+        } else {
+          updatedErrors.state = "";
+        }
+      } else if (field === "lat") {
+        if (!value) {
+          updatedErrors.lat = "Latitude is required";
+        } else {
+          updatedErrors.lat = "";
+        }
+      } else if (field === "lng") {
+        if (!value) {
+          updatedErrors.lng = "Longitude is required";
+        } else {
+          updatedErrors.lng = "";
+        }
+      } else if (field === "description") {
+        if (!value || value.length < 30) {
+          updatedErrors.description =
+            "Description is required and should be at least 30 characters";
+        } else {
+          updatedErrors.description = "";
+        }
+      } else if (field === "name") {
+        if (!value) {
+          updatedErrors.name = "Name of your spot is required";
+        } else {
+          updatedErrors.name = "";
+        }
       }
-
       return updatedErrors;
     });
   };
@@ -220,9 +319,8 @@ const CreateNewSpot = () => {
               value={country}
               onChange={(e) => {
                 setCountry(e.target.value);
-                handleInputChange("country");
+                handleInputChange("country", e.target.value);
               }}
-              //   required
             />
             {errors.country && (
               <p className="error-message">{errors.country}</p>
@@ -235,7 +333,7 @@ const CreateNewSpot = () => {
               value={address}
               onChange={(e) => {
                 setAddress(e.target.value);
-                handleInputChange("address");
+                handleInputChange("address", e.target.value);
               }}
             />
             {errors.address && (
@@ -251,7 +349,7 @@ const CreateNewSpot = () => {
                   value={city}
                   onChange={(e) => {
                     setCity(e.target.value);
-                    handleInputChange("city");
+                    handleInputChange("city", e.target.value);
                   }}
                 />
                 {errors.city && <p className="error-message">{errors.city}</p>}
@@ -265,7 +363,7 @@ const CreateNewSpot = () => {
                   value={state}
                   onChange={(e) => {
                     setState(e.target.value);
-                    handleInputChange("state");
+                    handleInputChange("state", e.target.value);
                   }}
                 />
                 {errors.state && (
@@ -283,7 +381,7 @@ const CreateNewSpot = () => {
                   value={lat}
                   onChange={(e) => {
                     setLat(e.target.value);
-                    handleInputChange("lat");
+                    handleInputChange("lat", e.target.value);
                   }}
                 />
                 {errors.lat && <p className="error-message">{errors.lat}</p>}
@@ -297,7 +395,7 @@ const CreateNewSpot = () => {
                   value={lng}
                   onChange={(e) => {
                     setLng(e.target.value);
-                    handleInputChange("lng");
+                    handleInputChange("lng", e.target.value);
                   }}
                 />
                 {errors.lng && <p className="error-message">{errors.lng}</p>}
@@ -318,7 +416,7 @@ const CreateNewSpot = () => {
             value={description}
             onChange={(e) => {
               setDescription(e.target.value);
-              handleInputChange("description");
+              handleInputChange("description", e.target.value);
             }}
           />
           {errors.description && (
@@ -338,7 +436,7 @@ const CreateNewSpot = () => {
             value={name}
             onChange={(e) => {
               setName(e.target.value);
-              handleInputChange("name");
+              handleInputChange("name", e.target.value);
             }}
           />
           {errors.name && <p className="error-message">{errors.name}</p>}
@@ -358,7 +456,7 @@ const CreateNewSpot = () => {
               value={price}
               onChange={(e) => {
                 setPrice(e.target.value);
-                handleInputChange("price");
+                handleInputChange("price", e.target.value);
               }}
             />
           </div>
