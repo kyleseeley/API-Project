@@ -68,6 +68,11 @@ const SpotDetails = () => {
   const hostFirstName = selectedSpot.Owner?.firstName;
   const hostLastName = selectedSpot.Owner?.lastName;
 
+  const avgRating =
+    typeof selectedSpot.avgStarRating === "number"
+      ? selectedSpot.avgStarRating.toFixed(1)
+      : "New";
+
   return (
     <div className="spot-details-container">
       <h1 className="Name">{selectedSpot.name}</h1>
@@ -106,9 +111,7 @@ const SpotDetails = () => {
             <p className="spot-price">${selectedSpot.price} night</p>
             <p className="spot-avgRating">
               <i className="fa-solid fa-star"></i>
-              {selectedSpot.avgStarRating !== null
-                ? selectedSpot.avgStarRating.toFixed(1)
-                : "New"}
+              {avgRating}
             </p>
             {spotReviews[0] && spotReviews[0].length > 0 && (
               <>
@@ -129,10 +132,7 @@ const SpotDetails = () => {
         <div className="reviews">
           <h3 className="review-heading">
             <i className="fa-solid fa-star"></i>
-            {selectedSpot.avgStarRating !== null
-              ? selectedSpot.avgStarRating.toFixed(1)
-              : "New"}{" "}
-            &nbsp; &middot; &nbsp;
+            {avgRating} &nbsp; &middot; &nbsp;
             {spotReviews[0].length}{" "}
             {spotReviews[0].length === 1 ? "review" : "reviews"}
           </h3>

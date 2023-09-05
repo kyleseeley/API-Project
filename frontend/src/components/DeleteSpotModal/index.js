@@ -38,7 +38,11 @@ const DeleteSpotModal = ({ spotId, onClose }) => {
       <h3 className="modal-subheading2">
         Are you sure you want to remove this spot from the listings?
       </h3>
-      <button type="button" className="yes-delete" onClick={handleSubmit}>
+      <button
+        type="button"
+        className="yes-delete"
+        onClick={() => handleSubmit(spotId)}
+      >
         Yes (Delete Spot)
       </button>
       <button type="button" className="no-delete" onClick={onClose}>
