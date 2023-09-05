@@ -20,7 +20,7 @@ const ManageSpots = () => {
 
   return (
     <>
-      <h1>Manage Your Spots</h1>
+      <h1 className="header">Manage Your Spots</h1>
       <ul className="spot-list">
         {userSpots.map(
           ({ id, name, city, state, price, avgRating, previewImage }) => (

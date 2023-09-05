@@ -1,30 +1,22 @@
 .spot-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  list-style: none;
-  padding: 0;
   width: 100%;
   overflow-x: hidden;
 }
 
 .spot-group {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
+  gap: 10px;
   list-style: none;
-  padding: 20px;
+  padding: 10px;
   margin-top: 40px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }
 
 .spot-item {
-  display: flex;
-  flex-direction: column;
   border: 1px solid #ccc;
-  padding: 0px 20px;
   border-radius: 5px;
   overflow: hidden;
-  position: relative;
+  width: 300px;
 }
 
 .tooltip {
@@ -52,9 +44,9 @@
   align-items: center;
   height: 200px;
   width: 100%;
-  /* margin-bottom: 10px; */
+  margin-bottom: 10px;
   overflow: hidden;
-  /* position: relative; */
+  position: relative;
   margin-top: 8px;
   background-position: center;
 }
@@ -76,8 +68,8 @@
 
 .avg-rating {
   position: absolute;
-  top: 0; /* Position at the top */
-  right: 0; /* Position at the right */
+  top: 0;
+  right: 0;
   margin: 5px 0;
   text-align: right;
 }
@@ -93,7 +85,25 @@
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
-@media (min-width: 1200px) {
+@media (max-width: 720px) {
+  .spot-group {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 721px) and (max-width: 1059px) {
+  .spot-group {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1060px) and (max-width: 1450px) {
+  .spot-group {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1451px) {
   .spot-group {
     grid-template-columns: repeat(4, 1fr);
   }

@@ -69,8 +69,8 @@ function App() {
       {/* {userRestored && ( */}
       <Switch>
         <Route exact path="/" component={LandingPage} />
-        <Route path="/spots/new" component={CreateNewSpot} />
-        <Route path="/spots/current" component={ManageSpots} />
+        <Route exact path="/spots/current" component={ManageSpots} />
+        <Route exact path="/spots/new" component={CreateNewSpot} />
         <Route path="/spots/:id" component={SpotDetails} />
       </Switch>
     </>
