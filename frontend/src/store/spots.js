@@ -227,23 +227,32 @@ const spotsReducer = (state = initialState, action) => {
     case SPOT_REVIEWS:
       return { ...state, reviews: Object.values(action.reviews) };
     case CREATE_SPOT:
-      return { ...state, spots: [...state.spots, action.spotInfo] };
+      return { ...state, allSpots: [...state.allSpots, action.spotInfo] };
     case ADD_SPOT_IMAGES: {
       const { spotId, url, preview } = action.payload;
-      const updatedSpots = state.spots.map((spot) => {
+      const updatedSpots = state.allSpots.map((spot) => {
         if (spot.id === spotId) {
-          const updatedImageUrls = spot.imageUrls ? [...spot.imageUrls] : []; // Initialize or copy existing imageUrls
+          const updatedImageUrls = spot.imageUrls ? [...spot.imageUrls] : [];
           return {
             ...spot,
-            imageUrls: [...updatedImageUrls, url], // Append new URL to the array
+            imageUrls: [...updatedImageUrls, url],
             preview: preview,
           };
         }
         return spot;
       });
+      const updatedSelectedSpot = state.selectedSpot
+        ? {
+            ...state.selectedSpot,
+            imageUrls: [...state.selectedSpot.imageUrls, url],
+            preview: preview,
+          }
+        : null;
+
       return {
         ...state,
-        spots: updatedSpots,
+        allSpots: updatedSpots,
+        selectedSpot: updatedSelectedSpot,
       };
     }
     case CREATE_REVIEW:
@@ -259,10 +268,19 @@ const spotsReducer = (state = initialState, action) => {
     case UPDATE_SPOT: {
       const { spotId, updatedSpotData } = action;
       // Find the spot in state and update its data
-      const updatedSpots = state.spots.map((spot) =>
+      const updatedSpots = state.allSpots.map((spot) =>
         spot.id === spotId ? { ...spot, ...updatedSpotData } : spot
       );
-      return { ...state, spots: updatedSpots };
+      const updatedSelectedSpot =
+        state.selectedSpot?.id === spotId
+          ? { ...state.selectedSpot, ...updatedSpotData }
+          : state.selectedSpot;
+
+      return {
+        ...state,
+        allSpots: updatedSpots,
+        selectedSpot: updatedSelectedSpot,
+      };
     }
     case DELETE_SPOT:
       // Filter out the deleted spot from the state
