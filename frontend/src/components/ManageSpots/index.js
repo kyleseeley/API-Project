@@ -1,15 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUserSpots } from "../../store/spots";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+import UpdateSpot from "../UpdateSpot";
 import "./ManageSpots.css";
 
 const ManageSpots = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.session.user);
-  console.log("currentUser", currentUser);
   const userSpots = useSelector((state) => state.spots.userSpots);
-  console.log("userSpots", userSpots);
+
+  const [editingSpotId, setEditingSpotId] = useState(null);
 
   useEffect(() => {
     if (currentUser) {
@@ -20,33 +21,51 @@ const ManageSpots = () => {
 
   return (
     <>
-      <h1 className="header">Manage Your Spots</h1>
-      <ul className="spot-list">
+      <h1 className="header1">Manage Your Spots</h1>
+      <div className="create-spot-link1">
+        <button>
+          <NavLink to="/spots/new">Create a New Spot</NavLink>
+        </button>
+      </div>
+      <ul className="spot-list1">
         {userSpots.map(
           ({ id, name, city, state, price, avgRating, previewImage }) => (
-            <li key={id} className="spot-group">
-              <Link to={`/spots/${id}`} className="spot-link" data-name={name}>
-                <div key={id} className="spot-item">
-                  <div className="spot-image">
+            <li key={id} className="spot-group1">
+              <Link to={`/spots/${id}`} className="spot-link1" data-name={name}>
+                <div key={id} className="spot-item1">
+                  <div className="spot-image1">
                     <img src={previewImage} alt="Preview" />
                   </div>
-                  <div className="spot-details">
+                  <div className="spot-details1">
                     <p>
                       {city}, {state}
                     </p>
                     <p>${price} night</p>
-                    <p className="avg-rating">
+                    <p className="avg-rating1">
                       <i className="fa-solid fa-star"></i>
                       {avgRating ? avgRating.toFixed(1) : "New"}
                     </p>
                   </div>
-                  <div className="tooltip">{name}</div>
+                  <div className="tooltip1">{name}</div>
                 </div>
               </Link>
+              <button
+                className="update-button1"
+                onClick={() => setEditingSpotId(id)}
+              >
+                Update
+              </button>
+              <button
+                className="delete-button1"
+                // onClick={() => setEditingSpotId(id)}
+              >
+                Delete
+              </button>
             </li>
           )
         )}
       </ul>
+      {editingSpotId && <UpdateSpot spotId={editingSpotId} />}
     </>
   );
 };
