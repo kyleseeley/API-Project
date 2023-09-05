@@ -127,6 +127,7 @@ export const createNewSpot = (spotInfo) => async (dispatch) => {
   }
 
   const newSpotData = await response.json();
+  console.log("Response data from server after creating spot:", newSpotData);
 
   dispatch(createSpot(newSpotData));
 
@@ -227,7 +228,11 @@ const spotsReducer = (state = initialState, action) => {
     case SPOT_REVIEWS:
       return { ...state, reviews: Object.values(action.reviews) };
     case CREATE_SPOT:
-      return { ...state, allSpots: [...state.allSpots, action.spotInfo] };
+      return {
+        ...state,
+        allSpots: [...state.allSpots, action.spotInfo],
+        selectedSpot: action.spotInfo,
+      };
     case ADD_SPOT_IMAGES: {
       const { spotId, url, preview } = action.payload;
       const updatedSpots = state.allSpots.map((spot) => {
