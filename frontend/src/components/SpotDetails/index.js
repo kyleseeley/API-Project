@@ -25,7 +25,6 @@ const SpotDetails = () => {
 
   const selectedSpot = useSelector((state) => state.spots.selectedSpot);
   const spotReviews = useSelector((state) => state.spots.reviews);
-  console.log("spotReviews", spotReviews);
   const currentUser = useSelector((state) => state.session.user);
 
   useEffect(() => {

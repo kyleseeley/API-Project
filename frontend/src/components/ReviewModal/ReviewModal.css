@@ -4,7 +4,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
-  padding: 20px;
+  padding: 10px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 1000;
@@ -44,11 +44,12 @@
 .review-modal button {
   background-color: #007bff;
   color: #fff;
-  padding: 10px 20px;
+  padding: 15px 20px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s;
+  box-shadow: 5px 3px 3px black;
 }
 
 .review-modal button[type="submit"]:disabled {
@@ -82,6 +83,7 @@
 .star-rating-label {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .star-rating {
@@ -98,4 +100,9 @@
 
 .selected {
   color: gold;
+}
+
+.star-name {
+  font-size: 24px;
+  margin-left: 20px;
 }

@@ -25,7 +25,6 @@ const CreateNewSpot = () => {
   const [imageUrl2, setImageUrl2] = useState("");
   const [imageUrl3, setImageUrl3] = useState("");
   const [imageUrl4, setImageUrl4] = useState("");
-  const [showErrors, setShowErrors] = useState(false);
 
   const resetForm = () => {
     setAddress("");
@@ -50,10 +49,77 @@ const CreateNewSpot = () => {
     return isValid;
   };
 
+  const validateForm = () => {
+    if (!country) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        country: "Country is required",
+      }));
+    }
+
+    if (!address) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        address: "Street Address is required",
+      }));
+    }
+
+    if (!city) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        city: "City is required",
+      }));
+    }
+
+    if (!state) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        state: "State is required",
+      }));
+    }
+
+    if (!lat) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        lat: "Latitude is required",
+      }));
+    }
+
+    if (!lng) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        lng: "Longitude is required",
+      }));
+    }
+
+    if (!name) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        name: "Name of your spot is required",
+      }));
+    }
+
+    if (!description || description.length < 30) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        description:
+          "Description is required and should be at least 30 characters",
+      }));
+    }
+
+    if (!price) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        price: "Price per night is required",
+      }));
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setShowErrors(true);
     setErrors({});
+
+    validateForm();
 
     // Validate the Preview Image URL
     if (!isValidImageUrl(previewImageUrl)) {
@@ -78,79 +144,6 @@ const CreateNewSpot = () => {
       setErrors((prevErrors) => ({
         ...prevErrors,
         ...imageErrors,
-      }));
-      return;
-    }
-
-    if (!country) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        country: "Country is required",
-      }));
-      return;
-    }
-
-    if (!address) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        address: "Street Address is required",
-      }));
-      return;
-    }
-
-    if (!city) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        city: "City is required",
-      }));
-      return;
-    }
-
-    if (!state) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        state: "State is required",
-      }));
-      return;
-    }
-
-    if (!lat) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        lat: "Latitude is required",
-      }));
-      return;
-    }
-
-    if (!lng) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        lng: "Longitude is required",
-      }));
-      return;
-    }
-
-    if (!name) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        name: "Name of your spot is required",
-      }));
-      return;
-    }
-
-    if (!description || description.length < 30) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        description:
-          "Description is required and should be at least 30 characters",
-      }));
-      return;
-    }
-
-    if (!price) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        price: "Price per night is required",
       }));
       return;
     }
@@ -220,14 +213,14 @@ const CreateNewSpot = () => {
 
           setErrors(errorFields);
           console.log(errorFields);
-          setShowErrors(true);
         }
       });
   };
 
-  useEffect(() => {
-    resetForm();
-  }, []);
+  // useEffect(() => {
+  //   // resetForm();
+  //   validateForm();
+  // }, [country, address, city, state, lat, lng]);
 
   const handleInputChange = (field, value) => {
     setErrors((prevErrors) => {
@@ -294,6 +287,12 @@ const CreateNewSpot = () => {
           updatedErrors.name = "Name of your spot is required";
         } else {
           updatedErrors.name = "";
+        }
+      } else if (field === "price") {
+        if (!value) {
+          updatedErrors.price = "Price is required";
+        } else {
+          updatedErrors.price = "";
         }
       }
       return updatedErrors;

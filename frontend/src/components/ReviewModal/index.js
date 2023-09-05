@@ -60,7 +60,7 @@ const ReviewModal = ({ spotId, onClose }) => {
           required
         />
         <label className="star-rating-label">
-          Rate your stay:
+          {/* Rate your stay: */}
           <div className="star-rating">
             {[1, 2, 3, 4, 5].map((value) => (
               <span
@@ -72,13 +72,11 @@ const ReviewModal = ({ spotId, onClose }) => {
               </span>
             ))}
           </div>
+          <span className="star-name">Stars</span>
         </label>
 
         <button type="submit" disabled={isButtonDisabled}>
           Submit your review
-        </button>
-        <button type="button" onClick={onClose}>
-          Cancel
         </button>
       </form>
     </div>
