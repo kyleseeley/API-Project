@@ -6,6 +6,7 @@ export const SPOT_REVIEWS = "/spots/SPOT_REVIEWS";
 export const CREATE_SPOT = "spots/CREATE_SPOT";
 export const ADD_SPOT_IMAGES = "spots/ADD_SPOT_IMAGES";
 export const CREATE_REVIEW = "spots/CREATE_REVIEW";
+export const LOAD_USER_SPOTS = "spots/LOAD_USER_SPOTS";
 
 export const loadSpots = (spots) => ({
   type: LOAD_SPOTS,
@@ -30,6 +31,11 @@ export const createSpot = (spotInfo) => ({
 export const addSpotImages = (spotId, url, preview) => ({
   type: ADD_SPOT_IMAGES,
   payload: { spotId, url, preview },
+});
+
+const loadUserSpots = (spots) => ({
+  type: LOAD_USER_SPOTS,
+  spots,
 });
 
 export const fetchSpots = () => async (dispatch) => {
@@ -161,16 +167,30 @@ export const createReview = (reviewData) => async (dispatch) => {
   }
 };
 
+export const fetchUserSpots = () => async (dispatch) => {
+  try {
+    const response = await csrfFetch("/api/spots/current");
+    if (!response.ok) {
+      throw new Error("Error fetching user spots");
+    }
+    const spots = await response.json();
+    dispatch(loadUserSpots(spots.Spots));
+  } catch (error) {
+    console.error("Error fetching user spots:", error);
+  }
+};
+
 const initialState = {
-  spots: [],
+  allSpots: [],
   selectedSpot: null,
   reviews: [],
+  userSpots: [],
 };
 
 const spotsReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOAD_SPOTS:
-      return { ...state, spots: Object.values(action.spots) };
+      return { ...state, allSpots: Object.values(action.spots) };
     case RECEIVE_SPOT:
       return { ...state, selectedSpot: action.spot };
     case SPOT_REVIEWS:
@@ -199,6 +219,11 @@ const spotsReducer = (state = initialState, action) => {
       return {
         ...state,
         reviews: [...state.reviews, action.review],
+      };
+    case LOAD_USER_SPOTS:
+      return {
+        ...state,
+        userSpots: action.spots,
       };
     default:
       return state;

@@ -7,6 +7,7 @@ import Navigation from "./components/Navigation";
 import LandingPage from "./components/LandingPage";
 import SpotDetails from "./components/SpotDetails";
 import CreateNewSpot from "./components/CreateNewSpot";
+import ManageSpots from "./components/ManageSpots";
 
 // function App() {
 //   const dispatch = useDispatch();
@@ -69,9 +70,9 @@ function App() {
       <Switch>
         <Route exact path="/" component={LandingPage} />
         <Route path="/spots/new" component={CreateNewSpot} />
+        <Route path="/spots/current" component={ManageSpots} />
         <Route path="/spots/:id" component={SpotDetails} />
       </Switch>
-      {/* )} */}
     </>
   );
 }
