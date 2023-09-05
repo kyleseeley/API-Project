@@ -3,14 +3,25 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchUserSpots } from "../../store/spots";
 import { Link, NavLink } from "react-router-dom";
 import UpdateSpot from "../UpdateSpot";
+import { deleteSpotById } from "../../store/spots";
+import DeleteSpotModal from "../DeleteSpotModal";
+import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
+import { useModal } from "../../context/Modal";
 import "./ManageSpots.css";
 
 const ManageSpots = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.session.user);
   const userSpots = useSelector((state) => state.spots.userSpots);
+  const { setModalContent } = useModal();
 
   const [editingSpotId, setEditingSpotId] = useState(null);
+  // const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [spotIdToDelete, setSpotIdToDelete] = useState(null);
+
+  const handleDeleteButtonClick = (spotId) => {
+    setSpotIdToDelete(spotId);
+  };
 
   useEffect(() => {
     if (currentUser) {
@@ -57,9 +68,17 @@ const ManageSpots = () => {
               </button>
               <button
                 className="delete-button1"
-                // onClick={() => setEditingSpotId(id)}
+                onClick={handleDeleteButtonClick}
               >
-                Delete
+                <OpenModalMenuItem
+                  itemText="Delete"
+                  modalComponent={
+                    <DeleteSpotModal
+                      spotId={spotIdToDelete}
+                      onClose={() => setModalContent(null)}
+                    />
+                  }
+                />
               </button>
             </li>
           )

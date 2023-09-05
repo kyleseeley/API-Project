@@ -8,6 +8,7 @@ export const ADD_SPOT_IMAGES = "spots/ADD_SPOT_IMAGES";
 export const CREATE_REVIEW = "spots/CREATE_REVIEW";
 export const LOAD_USER_SPOTS = "spots/LOAD_USER_SPOTS";
 export const UPDATE_SPOT = "spots/UPDATE_SPOT";
+export const DELETE_SPOT = "spots/DELETE_SPOT";
 
 export const loadSpots = (spots) => ({
   type: LOAD_SPOTS,
@@ -43,6 +44,11 @@ export const updateSpot = (spotId, updatedSpotData) => ({
   type: UPDATE_SPOT,
   spotId,
   updatedSpotData,
+});
+
+export const deleteSpot = (spotId) => ({
+  type: DELETE_SPOT,
+  spotId,
 });
 
 export const fetchSpots = () => async (dispatch) => {
@@ -187,6 +193,24 @@ export const fetchUserSpots = () => async (dispatch) => {
   }
 };
 
+export const deleteSpotById = (spotId) => async (dispatch) => {
+  try {
+    const response = await csrfFetch(`/api/spots/${spotId}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      throw new Error("Error deleting spot");
+    }
+
+    // Dispatch the DELETE_SPOT action with the deleted spot's ID
+    dispatch(deleteSpot(spotId));
+  } catch (error) {
+    console.error("Error deleting spot:", error);
+    // Handle error
+  }
+};
+
 const initialState = {
   allSpots: [],
   selectedSpot: null,
@@ -232,13 +256,23 @@ const spotsReducer = (state = initialState, action) => {
         ...state,
         userSpots: action.spots,
       };
-    case UPDATE_SPOT:
+    case UPDATE_SPOT: {
       const { spotId, updatedSpotData } = action;
       // Find the spot in state and update its data
       const updatedSpots = state.spots.map((spot) =>
         spot.id === spotId ? { ...spot, ...updatedSpotData } : spot
       );
       return { ...state, spots: updatedSpots };
+    }
+    case DELETE_SPOT:
+      // Filter out the deleted spot from the state
+      const updatedSpots = state.spots.filter(
+        (spot) => spot.id !== action.spotId
+      );
+      return {
+        ...state,
+        spots: updatedSpots,
+      };
     default:
       return state;
   }
