@@ -40,13 +40,6 @@ module.exports = {
           stars: 3,
         },
         {
-          spotId: 2,
-          userId: 4,
-          review:
-            "We loved our stay in this gorgeous house! It’s huge and the living room, decks and master bedroom & bath has amazing views of the ocean and caves of La Jolla. The hot tub is excellent after a day at the beach! The host was very responsive and helpful.",
-          stars: 5,
-        },
-        {
           spotId: 4,
           userId: 2,
           review:

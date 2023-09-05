@@ -24,13 +24,15 @@ const SpotDetails = () => {
   };
 
   const selectedSpot = useSelector((state) => state.spots.selectedSpot);
+  console.log("selectedSpot", selectedSpot);
   const spotReviews = useSelector((state) => state.spots.reviews);
+  console.log("spotReviews", spotReviews);
   const currentUser = useSelector((state) => state.session.user);
 
   useEffect(() => {
     dispatch(fetchSpotDetails(id));
     dispatch(fetchSpotReviews(id));
-  }, [dispatch, fetchSpotReviews, id]);
+  }, [dispatch, id]);
 
   const isClickInsidePopout = (event) => {
     if (popoutRef.current && popoutRef.current.contains(event.target)) {
