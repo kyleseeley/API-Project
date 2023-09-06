@@ -18,31 +18,36 @@ const LandingPage = () => {
       {spotsData.map((spotGroup) => (
         <li key={spotGroup[0].id} className="spot-group">
           {spotGroup.map(
-            ({ id, name, city, state, price, avgRating, previewImage }) => (
-              <Link
-                to={`/spots/${id}`}
-                className="spot-link"
-                key={id}
-                data-name={name}
-              >
-                <div key={id} className="spot-item">
-                  <div className="spot-image">
-                    <img src={previewImage} alt="Preview" />
+            ({ id, name, city, state, price, avgRating, previewImage }) => {
+              const formattedAvgRating =
+                avgRating !== null ? avgRating.toFixed(1) : "New";
+
+              return (
+                <Link
+                  to={`/spots/${id}`}
+                  className="spot-link"
+                  key={id}
+                  data-name={name}
+                >
+                  <div key={id} className="spot-item">
+                    <div className="spot-image">
+                      <img src={previewImage} alt="Preview" />
+                    </div>
+                    <div className="spot-details">
+                      <p>
+                        {city}, {state}
+                      </p>
+                      <p>${price} night</p>
+                      <p className="avg-rating">
+                        <i className="fa-solid fa-star"></i>
+                        {formattedAvgRating}
+                      </p>
+                    </div>
+                    <div className="tooltip">{name}</div>
                   </div>
-                  <div className="spot-details">
-                    <p>
-                      {city}, {state}
-                    </p>
-                    <p>${price} night</p>
-                    <p className="avg-rating">
-                      <i className="fa-solid fa-star"></i>
-                      {avgRating !== null ? avgRating.toFixed(1) : "New"}
-                    </p>
-                  </div>
-                  <div className="tooltip">{name}</div>
-                </div>
-              </Link>
-            )
+                </Link>
+              );
+            }
           )}
         </li>
       ))}
