@@ -4,7 +4,7 @@ import * as spotActions from "../../store/spots";
 import { useModal } from "../../context/Modal";
 import "./DeleteReviewModal.css";
 
-const DeleteReviewModal = ({ reviewId, onClose }) => {
+const DeleteReviewModal = ({ reviewId, spotId, onClose }) => {
   const dispatch = useDispatch();
   const [errors, setErrors] = useState({});
 
@@ -17,7 +17,7 @@ const DeleteReviewModal = ({ reviewId, onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    dispatch(spotActions.deleteReviewById(reviewId))
+    dispatch(spotActions.deleteReviewById(reviewId, spotId))
       .then(() => {
         resetModalState();
         closeModal();

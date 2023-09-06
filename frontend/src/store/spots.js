@@ -209,8 +209,6 @@ export const deleteSpotById = (spotId) => async (dispatch) => {
     if (!response.ok) {
       throw new Error("Error deleting spot");
     }
-    console.log("spotId before dispatch", spotId);
-    // Dispatch the DELETE_SPOT action with the deleted spot's ID
     dispatch(deleteSpot(spotId));
   } catch (error) {
     console.error("Error deleting spot:", error);
@@ -218,7 +216,7 @@ export const deleteSpotById = (spotId) => async (dispatch) => {
   }
 };
 
-export const deleteReviewById = (reviewId) => async (dispatch) => {
+export const deleteReviewById = (reviewId, spotId) => async (dispatch) => {
   try {
     const response = await csrfFetch(`/api/reviews/${reviewId}`, {
       method: "DELETE",
@@ -228,8 +226,10 @@ export const deleteReviewById = (reviewId) => async (dispatch) => {
       throw new Error("Error deleting review");
     }
 
-    // Dispatch the DELETE_REVIEW action with the deleted review's ID
+    console.log("Deleted review with ID in function:", reviewId);
+
     dispatch(deleteReview(reviewId));
+    dispatch(fetchSpotReviews(spotId));
   } catch (error) {
     console.error("Error deleting review:", error);
     // Handle error
@@ -333,6 +333,8 @@ const spotsReducer = (state = initialState, action) => {
         (review) => review.id !== action.reviewId
       );
 
+      console.log("Deleted review with ID in case:", action.reviewId);
+
       const updatedSelectedSpot = state.selectedSpot.id
         ? {
             ...state.selectedSpot,
@@ -340,9 +342,11 @@ const spotsReducer = (state = initialState, action) => {
               ? state.selectedSpot.reviews.filter(
                   (review) => review.id !== action.reviewId
                 )
-              : [], // Initialize reviews as an empty array if it's undefined
+              : null,
           }
         : state.selectedSpot;
+
+      console.log("Updated selectedSpot:", updatedSelectedSpot);
 
       return {
         ...state,

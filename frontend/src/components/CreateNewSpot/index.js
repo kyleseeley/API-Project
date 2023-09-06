@@ -121,23 +121,6 @@ const CreateNewSpot = () => {
 
     validateForm();
 
-    console.log("Data to be sent to the server:", {
-      address,
-      city,
-      state,
-      country,
-      lat,
-      lng,
-      name,
-      description,
-      price,
-      previewImageUrl,
-      imageUrl1,
-      imageUrl2,
-      imageUrl3,
-      imageUrl4,
-    });
-
     // Validate the Preview Image URL
     if (!isValidImageUrl(previewImageUrl)) {
       setErrors((prevErrors) => ({
