@@ -220,3 +220,27 @@
 .open-modal-menu-item li {
   list-style: none;
 }
+
+.delete-review {
+  background-color: gray;
+  color: #fff;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline;
+  box-shadow: 5px 3px 3px black;
+  margin-left: 10px;
+  width: 10%;
+}
+
+.review-container .delete-review {
+  display: inline; /* Change display property to inline */
+  margin-left: 0; /* Remove the left margin */
+}
+
+.remove-dot {
+  list-style-type: none;
+}

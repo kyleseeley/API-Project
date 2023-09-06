@@ -9,6 +9,7 @@ export const CREATE_REVIEW = "spots/CREATE_REVIEW";
 export const LOAD_USER_SPOTS = "spots/LOAD_USER_SPOTS";
 export const UPDATE_SPOT = "spots/UPDATE_SPOT";
 export const DELETE_SPOT = "spots/DELETE_SPOT";
+export const DELETE_REVIEW = "spots/DELETE_REVIEW";
 
 export const loadSpots = (spots) => ({
   type: LOAD_SPOTS,
@@ -49,6 +50,11 @@ export const updateSpot = (spotId, updatedSpotData) => ({
 export const deleteSpot = (spotId) => ({
   type: DELETE_SPOT,
   spotId,
+});
+
+export const deleteReview = (reviewId) => ({
+  type: DELETE_REVIEW,
+  reviewId,
 });
 
 export const fetchSpots = () => async (dispatch) => {
@@ -212,6 +218,24 @@ export const deleteSpotById = (spotId) => async (dispatch) => {
   }
 };
 
+export const deleteReviewById = (reviewId) => async (dispatch) => {
+  try {
+    const response = await csrfFetch(`/api/reviews/${reviewId}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      throw new Error("Error deleting review");
+    }
+
+    // Dispatch the DELETE_REVIEW action with the deleted review's ID
+    dispatch(deleteReview(reviewId));
+  } catch (error) {
+    console.error("Error deleting review:", error);
+    // Handle error
+  }
+};
+
 const initialState = {
   allSpots: [],
   selectedSpot: {},
@@ -302,6 +326,28 @@ const spotsReducer = (state = initialState, action) => {
         ...state,
         allSpots: updatedSpots,
         userSpots: updatedUserSpots,
+      };
+    case DELETE_REVIEW:
+      // Filter out the deleted review from the state
+      const updatedReviews = state.reviews.filter(
+        (review) => review.id !== action.reviewId
+      );
+
+      const updatedSelectedSpot = state.selectedSpot.id
+        ? {
+            ...state.selectedSpot,
+            reviews: state.selectedSpot.reviews
+              ? state.selectedSpot.reviews.filter(
+                  (review) => review.id !== action.reviewId
+                )
+              : [], // Initialize reviews as an empty array if it's undefined
+          }
+        : state.selectedSpot;
+
+      return {
+        ...state,
+        reviews: updatedReviews,
+        selectedSpot: updatedSelectedSpot,
       };
     default:
       return state;

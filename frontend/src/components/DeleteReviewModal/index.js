@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import * as spotActions from "../../store/spots";
 import { useModal } from "../../context/Modal";
-import "./DeleteSpotModal.css";
-import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
+import "./DeleteReviewModal.css";
 
-const DeleteSpotModal = ({ spotId, onClose }) => {
+const DeleteReviewModal = ({ reviewId, onClose }) => {
   const dispatch = useDispatch();
   const [errors, setErrors] = useState({});
 
@@ -18,7 +17,7 @@ const DeleteSpotModal = ({ spotId, onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    dispatch(spotActions.deleteSpotById(spotId))
+    dispatch(spotActions.deleteReviewById(reviewId))
       .then(() => {
         resetModalState();
         closeModal();
@@ -30,21 +29,20 @@ const DeleteSpotModal = ({ spotId, onClose }) => {
         }
       });
   };
-
   return (
-    <div className="delete-spot-modal">
-      <h2 className="modal-heading2">Confirm Delete</h2>
-      <h3 className="modal-subheading2">
-        Are you sure you want to remove this spot from the listings?
+    <div className="delete-review-modal">
+      <h2 className="modal-heading3">Confirm Delete</h2>
+      <h3 className="modal-subheading3">
+        Are you sure you want to delete this review?
       </h3>
-      <button type="button" className="yes-delete" onClick={handleSubmit}>
-        Yes (Delete Spot)
+      <button type="button" className="yes-delete3" onClick={handleSubmit}>
+        Yes (Delete Review)
       </button>
-      <button type="button" className="no-delete" onClick={onClose}>
-        No (Keep Spot)
+      <button type="button" className="no-delete3" onClick={onClose}>
+        No (Keep Review)
       </button>
     </div>
   );
 };
 
-export default DeleteSpotModal;
+export default DeleteReviewModal;

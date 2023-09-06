@@ -5,6 +5,7 @@ import { fetchSpotDetails, fetchSpotReviews } from "../../store/spots";
 import ReviewModal from "../ReviewModal";
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 import { useModal } from "../../context/Modal";
+import DeleteReviewModal from "../DeleteReviewModal";
 import "./SpotDetails.css";
 
 const SpotDetails = () => {
@@ -169,6 +170,19 @@ const SpotDetails = () => {
                   </p>
                 </div>
                 <p className="review">{review.review}</p>
+                {currentUser && currentUser.id === review.User.id && (
+                  <button className="delete-review remove-dot delete-review-small">
+                    <OpenModalMenuItem
+                      itemText="Delete"
+                      modalComponent={
+                        <DeleteReviewModal
+                          reviewId={review.id}
+                          onClose={() => setModalContent(null)}
+                        />
+                      }
+                    />
+                  </button>
+                )}
               </div>
             ))}
           {currentUser &&
