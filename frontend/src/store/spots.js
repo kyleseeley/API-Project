@@ -203,7 +203,7 @@ export const deleteSpotById = (spotId) => async (dispatch) => {
     if (!response.ok) {
       throw new Error("Error deleting spot");
     }
-
+    console.log("spotId before dispatch", spotId);
     // Dispatch the DELETE_SPOT action with the deleted spot's ID
     dispatch(deleteSpot(spotId));
   } catch (error) {
@@ -291,12 +291,17 @@ const spotsReducer = (state = initialState, action) => {
     }
     case DELETE_SPOT:
       // Filter out the deleted spot from the state
-      const updatedSpots = state.spots.filter(
+      const updatedSpots = state.allSpots.filter(
+        (spot) => spot.id !== action.spotId
+      );
+
+      const updatedUserSpots = state.userSpots.filter(
         (spot) => spot.id !== action.spotId
       );
       return {
         ...state,
-        spots: updatedSpots,
+        allSpots: updatedSpots,
+        userSpots: updatedUserSpots,
       };
     default:
       return state;

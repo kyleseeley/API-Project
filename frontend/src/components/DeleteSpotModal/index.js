@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import * as spotActions from "../../store/spots";
 import { useModal } from "../../context/Modal";
-import { deleteSpotById } from "../../store/spots";
 import "./DeleteSpotModal.css";
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 
@@ -18,6 +17,7 @@ const DeleteSpotModal = ({ spotId, onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log("spotId in handleSubmit:", spotId);
 
     dispatch(spotActions.deleteSpotById(spotId))
       .then(() => {
@@ -41,7 +41,7 @@ const DeleteSpotModal = ({ spotId, onClose }) => {
       <button
         type="button"
         className="yes-delete"
-        onClick={() => handleSubmit(spotId)}
+        onClick={(spotId) => handleSubmit(spotId)}
       >
         Yes (Delete Spot)
       </button>

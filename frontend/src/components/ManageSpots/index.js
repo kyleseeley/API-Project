@@ -20,7 +20,17 @@ const ManageSpots = () => {
   const [spotIdToDelete, setSpotIdToDelete] = useState(null);
 
   const handleDeleteButtonClick = (spotId) => {
+    console.log("spotId before setting state:", spotId);
     setSpotIdToDelete(spotId);
+    setModalContent(
+      <DeleteSpotModal
+        spotId={spotId} // Pass the spotId to the modal
+        onClose={() => {
+          setModalContent(null);
+          setSpotIdToDelete(null); // Reset spotIdToDelete when modal is closed
+        }}
+      />
+    );
   };
 
   useEffect(() => {
@@ -68,7 +78,7 @@ const ManageSpots = () => {
               </button>
               <button
                 className="delete-button1"
-                onClick={handleDeleteButtonClick}
+                onClick={() => handleDeleteButtonClick(id)}
               >
                 <OpenModalMenuItem
                   itemText="Delete"
