@@ -214,7 +214,7 @@ export const deleteSpotById = (spotId) => async (dispatch) => {
 
 const initialState = {
   allSpots: [],
-  selectedSpot: null,
+  selectedSpot: {},
   reviews: [],
   userSpots: [],
 };
@@ -249,7 +249,9 @@ const spotsReducer = (state = initialState, action) => {
       const updatedSelectedSpot = state.selectedSpot
         ? {
             ...state.selectedSpot,
-            imageUrls: [...state.selectedSpot.imageUrls, url],
+            imageUrls: state.selectedSpot.imageUrls
+              ? [...state.selectedSpot.imageUrls, url]
+              : [url], // Provide a default value (an array with the new URL)
             preview: preview,
           }
         : null;
