@@ -70,8 +70,11 @@ const SpotDetails = () => {
   const hostLastName = selectedSpot.Owner?.lastName;
 
   const avgRating =
-    typeof selectedSpot.avgStarRating === "number"
-      ? selectedSpot.avgStarRating.toFixed(1)
+    spotReviews[0] && spotReviews[0].length > 0
+      ? (
+          spotReviews[0].reduce((sum, review) => sum + review.stars, 0) /
+          spotReviews[0].length
+        ).toFixed(1)
       : "New";
 
   return (
