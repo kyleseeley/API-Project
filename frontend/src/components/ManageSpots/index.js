@@ -42,7 +42,7 @@ const ManageSpots = () => {
 
   return (
     <>
-      <h1 className="header1">Manage Your Spots</h1>
+      <h1 className="header1">Manage Spots</h1>
       <div className="create-spot-link1">
         <button>
           <NavLink to="/spots/new">Create a New Spot</NavLink>
