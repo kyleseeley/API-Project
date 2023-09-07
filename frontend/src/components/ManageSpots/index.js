@@ -21,7 +21,6 @@ const ManageSpots = () => {
   const [spotIdToDelete, setSpotIdToDelete] = useState(null);
 
   const handleDeleteButtonClick = (spotId) => {
-    console.log("spotId before setting state:", spotId);
     setSpotIdToDelete(spotId);
     setModalContent(
       <DeleteSpotModal

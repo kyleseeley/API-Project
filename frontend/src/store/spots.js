@@ -79,12 +79,12 @@ export const fetchSpotDetails = (spotId) => async (dispatch) => {
       const response = await fetch(`/api/spots/${spotId}`);
 
       if (!response.ok) {
-        throw new Error("Error fetching spot details 123");
+        throw new Error("Error fetching spot details");
       }
       const spot = await response.json();
       dispatch(receiveSpot(spot));
     } catch (error) {
-      console.log("Error fetching spot details 456", error);
+      console.log("Error fetching spot details", error);
     }
   }
 };
@@ -132,7 +132,6 @@ export const createNewSpot = (spotInfo) => async (dispatch) => {
   }
 
   const newSpotData = await response.json();
-  console.log("Response data from server after creating spot:", newSpotData);
 
   dispatch(createSpot(newSpotData));
 
@@ -182,7 +181,6 @@ export const createReview = (reviewData) => async (dispatch) => {
     dispatch(fetchSpotReviews(reviewData.spotId));
   } catch (error) {
     console.log("Error creating review", error);
-    // Handle error
   }
 };
 
@@ -224,8 +222,6 @@ export const deleteReviewById = (reviewId, spotId) => async (dispatch) => {
     if (!response.ok) {
       throw new Error("Error deleting review");
     }
-
-    console.log("Deleted review with ID in function:", reviewId);
 
     dispatch(deleteReview(reviewId));
     dispatch(fetchSpotReviews(spotId));

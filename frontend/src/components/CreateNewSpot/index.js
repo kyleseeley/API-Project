@@ -164,8 +164,6 @@ const CreateNewSpot = () => {
       .then((createdSpot) => {
         const createdSpotId = createdSpot.id;
 
-        console.log("Spot created successfully. Response data:", createdSpot);
-
         // Create an array of image URLs
         const imageUrls = [
           previewImageUrl,
@@ -198,8 +196,6 @@ const CreateNewSpot = () => {
           console.error("Error parsing JSON:", jsonError);
         }
         if (data && data.message) {
-          console.log("data", data);
-          console.log("message", data.message);
           const errorFields = {
             country: data.errors.country || "",
             address: data.errors.address || "",
@@ -214,7 +210,6 @@ const CreateNewSpot = () => {
           };
 
           setErrors(errorFields);
-          console.log(errorFields);
         }
       });
   };
