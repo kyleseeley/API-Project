@@ -170,7 +170,6 @@ const UpdateSpot = () => {
     e.preventDefault();
     setErrors({});
 
-    console.log("form submitted");
     validateForm();
     // Validate the Preview Image URL
     if (!isValidImageUrl(previewImageUrl)) {
@@ -178,7 +177,6 @@ const UpdateSpot = () => {
         ...prevErrors,
         // previewImageUrl: "Preview Image is required",
       }));
-      console.log("first if statement", errors);
       return;
     }
 
@@ -210,13 +208,9 @@ const UpdateSpot = () => {
       description,
       price,
     };
-    console.log("spotInfo before dispatch", spotInfo);
     dispatch(editCurrentSpot(spotId, spotInfo))
       .then((updatedSpot) => {
-        console.log("spotInfo", spotInfo);
         const updatedSpotId = updatedSpot.id;
-
-        console.log("Spot upadted successfully. Response data:", updatedSpot);
 
         // Create an array of image URLs
         const imageUrls = [
@@ -250,8 +244,6 @@ const UpdateSpot = () => {
           console.error("Error parsing JSON:", jsonError);
         }
         if (data && data.message) {
-          console.log("data", data);
-          console.log("message", data.message);
           const errorFields = {
             country: data.errors.country || "",
             address: data.errors.address || "",
@@ -266,13 +258,11 @@ const UpdateSpot = () => {
           };
 
           setErrors(errorFields);
-          console.log("at end of submit", errorFields);
         }
       });
   };
 
   const handleInputChange = (field, value) => {
-    console.log(`Handling input change for field: ${field}, value: ${value}`);
     setErrors((prevErrors) => {
       const updatedErrors = { ...prevErrors };
 

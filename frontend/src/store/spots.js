@@ -238,8 +238,6 @@ export const deleteReviewById = (reviewId, spotId) => async (dispatch) => {
 export const editCurrentSpot =
   (spotId, updatedSpotData) => async (dispatch) => {
     try {
-      console.log("spotId", spotId);
-      console.log("spotData", updatedSpotData);
       const response = await csrfFetch(`/api/spots/${spotId}`, {
         method: "PUT",
         headers: {
@@ -247,15 +245,14 @@ export const editCurrentSpot =
         },
         body: JSON.stringify(updatedSpotData),
       });
-      console.log("response", response);
+
       if (!response.ok) {
         throw new Error("Error updating spot");
       }
 
       const updatedSpot = await response.json();
-      console.log("updatedSpot before dispatch:", updatedSpot);
+
       dispatch(editSpot(updatedSpot));
-      console.log("updatedSpot after dispatch:", updatedSpot);
 
       return updatedSpot;
     } catch (error) {
@@ -267,11 +264,11 @@ export const editCurrentSpot =
 const initialState = {
   allSpots: [],
   selectedSpot: {
-    previewImageUrl: "", // Provide default value
-    imageUrl1: "", // Provide default value
-    imageUrl2: "", // Provide default value
-    imageUrl3: "", // Provide default value
-    imageUrl4: "", // Provide default value
+    previewImageUrl: "",
+    imageUrl1: "",
+    imageUrl2: "",
+    imageUrl3: "",
+    imageUrl4: "",
   },
   reviews: [],
   userSpots: [],
@@ -328,19 +325,12 @@ const spotsReducer = (state = initialState, action) => {
       };
     case UPDATE_SPOT: {
       const { spotId, updatedSpotData } = action;
-      // Find the spot in state and update its data
-      const updatedSpots = state.allSpots.map((spot) =>
-        spot.id === spotId ? { ...spot, ...updatedSpotData } : spot
-      );
-      const updatedSelectedSpot =
-        state.selectedSpot?.id === spotId
-          ? { ...state.selectedSpot, ...updatedSpotData }
-          : state.selectedSpot;
-
       return {
         ...state,
-        allSpots: updatedSpots,
-        selectedSpot: updatedSelectedSpot,
+        [spotId]: {
+          ...state[spotId],
+          ...updatedSpotData,
+        },
       };
     }
     case DELETE_SPOT:
@@ -363,8 +353,6 @@ const spotsReducer = (state = initialState, action) => {
         (review) => review.id !== action.reviewId
       );
 
-      console.log("Deleted review with ID in case:", action.reviewId);
-
       const updatedSelectedSpot = state.selectedSpot.id
         ? {
             ...state.selectedSpot,
@@ -375,8 +363,6 @@ const spotsReducer = (state = initialState, action) => {
               : null,
           }
         : state.selectedSpot;
-
-      console.log("Updated selectedSpot:", updatedSelectedSpot);
 
       return {
         ...state,

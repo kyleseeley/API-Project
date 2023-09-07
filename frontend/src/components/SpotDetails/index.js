@@ -28,9 +28,6 @@ const SpotDetails = () => {
   const spotReviews = useSelector((state) => state.spots.reviews);
   const currentUser = useSelector((state) => state.session.user);
 
-  console.log("Selected Spot:", selectedSpot);
-  console.log("Spot Reviews:", spotReviews);
-
   useEffect(() => {
     dispatch(fetchSpotDetails(id));
     dispatch(fetchSpotReviews(id));
