@@ -14,6 +14,7 @@ const ManageSpots = () => {
   const currentUser = useSelector((state) => state.session.user);
   const userSpots = useSelector((state) => state.spots.userSpots);
   const { setModalContent } = useModal();
+  const spot = useSelector((state) => state.spots.spot);
 
   const [editingSpotId, setEditingSpotId] = useState(null);
   // const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -74,7 +75,12 @@ const ManageSpots = () => {
                 className="update-button1"
                 onClick={() => setEditingSpotId(id)}
               >
-                Update
+                <Link
+                  to={`/spots/${id}/edit`}
+                  style={{ textDecoration: "none", color: "white" }}
+                >
+                  Update
+                </Link>
               </button>
               <button
                 className="delete-button1"
@@ -94,7 +100,9 @@ const ManageSpots = () => {
           )
         )}
       </ul>
-      {editingSpotId && <UpdateSpot spotId={editingSpotId} />}
+      {editingSpotId && spot && (
+        <UpdateSpot spotId={editingSpotId} spot={spot} />
+      )}
     </>
   );
 };

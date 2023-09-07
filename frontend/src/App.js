@@ -8,42 +8,7 @@ import LandingPage from "./components/LandingPage";
 import SpotDetails from "./components/SpotDetails";
 import CreateNewSpot from "./components/CreateNewSpot";
 import ManageSpots from "./components/ManageSpots";
-
-// function App() {
-//   const dispatch = useDispatch();
-//   const sessionUser = useSelector((state) => state.session.user);
-//   const [isLoaded, setIsLoaded] = useState(false);
-//   const [userRestored, setUserRestored] = useState(false);
-
-//   useEffect(() => {
-//     const storedToken = localStorage.getItem("token");
-
-//     if (!userRestored && storedToken) {
-//       dispatch(sessionActions.restoreUser()).then(() => {
-//         setIsLoaded(true);
-//         setUserRestored(true);
-//       });
-//     } else {
-//       setIsLoaded(true);
-//     }
-//   }, [dispatch, sessionUser, userRestored]);
-
-//   if (!isLoaded) {
-//     return null;
-//   }
-
-//   return (
-//     <>
-//       <Navigation isLoaded={isLoaded} />
-
-//       <Switch>
-//         <Route exact path="/" component={LandingPage} />
-//         <Route path="/spots/:id" component={SpotDetails} />
-//         <Route path="/spots/new" component={CreateNewSpot} />
-//       </Switch>
-//     </>
-//   );
-// }
+import UpdateSpot from "./components/UpdateSpot";
 
 function App() {
   const dispatch = useDispatch();
@@ -71,6 +36,7 @@ function App() {
         <Route exact path="/" component={LandingPage} />
         <Route exact path="/spots/current" component={ManageSpots} />
         <Route exact path="/spots/new" component={CreateNewSpot} />
+        <Route exact path="/spots/:spotId/edit" component={UpdateSpot} />
         <Route path="/spots/:id" component={SpotDetails} />
       </Switch>
     </>

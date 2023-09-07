@@ -1,0 +1,108 @@
+.update-spot-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0px;
+  width: 40%;
+}
+
+.update-spot-form {
+  width: 100%;
+}
+
+.section-header4 {
+  margin-bottom: 20px;
+  border-bottom: 2px solid lightgray;
+}
+
+.located-input-group4 {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.form-input-label4 {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  text-align: left;
+  margin: 0;
+  padding: 0;
+  padding-bottom: 3px;
+}
+
+.form-input4 {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: lightskyblue;
+  font-family: inherit;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.input-row4 {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.input-column4 {
+  display: flex;
+  flex-direction: column;
+  width: calc(50% - 5px);
+}
+
+.description-text4 {
+  width: 100%;
+  height: 10rem;
+  font-size: 14px;
+  border-radius: 4px;
+  background-color: lightskyblue;
+  margin-bottom: 10px;
+}
+
+.update-spot-button {
+  display: block;
+  margin: 0 auto;
+  margin-top: 20px;
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 3px 3px 3px black;
+  margin-bottom: 20px;
+}
+
+.add-image4 {
+  margin-bottom: 10px;
+}
+
+.update-spot-button:hover {
+  background-color: darkred;
+}
+
+.error-message4 {
+  color: #ff3333;
+  font-size: 14px;
+  margin-top: 3px;
+  /* text-align: center; */
+}
+
+.price-input-container4 {
+  display: flex;
+  align-items: baseline;
+}
+
+.dollar-sign4 {
+  font-size: 18px;
+  margin-right: 5px;
+  vertical-align: top;
+}

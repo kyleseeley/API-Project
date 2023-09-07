@@ -31,6 +31,11 @@ export const createSpot = (spotInfo) => ({
   spotInfo,
 });
 
+const editSpot = (spotInfo) => ({
+  type: UPDATE_SPOT,
+  spotInfo,
+});
+
 export const addSpotImages = (spotId, url, preview) => ({
   type: ADD_SPOT_IMAGES,
   payload: { spotId, url, preview },
@@ -39,12 +44,6 @@ export const addSpotImages = (spotId, url, preview) => ({
 const loadUserSpots = (spots) => ({
   type: LOAD_USER_SPOTS,
   spots,
-});
-
-export const updateSpot = (spotId, updatedSpotData) => ({
-  type: UPDATE_SPOT,
-  spotId,
-  updatedSpotData,
 });
 
 export const deleteSpot = (spotId) => ({
@@ -80,12 +79,12 @@ export const fetchSpotDetails = (spotId) => async (dispatch) => {
       const response = await fetch(`/api/spots/${spotId}`);
 
       if (!response.ok) {
-        throw new Error("Error fetching spot details");
+        throw new Error("Error fetching spot details 123");
       }
       const spot = await response.json();
       dispatch(receiveSpot(spot));
     } catch (error) {
-      console.log("Error fetching spot details", error);
+      console.log("Error fetching spot details 456", error);
     }
   }
 };
@@ -236,9 +235,44 @@ export const deleteReviewById = (reviewId, spotId) => async (dispatch) => {
   }
 };
 
+export const editCurrentSpot =
+  (spotId, updatedSpotData) => async (dispatch) => {
+    try {
+      console.log("spotId", spotId);
+      console.log("spotData", updatedSpotData);
+      const response = await csrfFetch(`/api/spots/${spotId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedSpotData),
+      });
+      console.log("response", response);
+      if (!response.ok) {
+        throw new Error("Error updating spot");
+      }
+
+      const updatedSpot = await response.json();
+      console.log("updatedSpot before dispatch:", updatedSpot);
+      dispatch(editSpot(updatedSpot));
+      console.log("updatedSpot after dispatch:", updatedSpot);
+
+      return updatedSpot;
+    } catch (error) {
+      console.error("Error updating spot:", error);
+      throw error;
+    }
+  };
+
 const initialState = {
   allSpots: [],
-  selectedSpot: {},
+  selectedSpot: {
+    previewImageUrl: "", // Provide default value
+    imageUrl1: "", // Provide default value
+    imageUrl2: "", // Provide default value
+    imageUrl3: "", // Provide default value
+    imageUrl4: "", // Provide default value
+  },
   reviews: [],
   userSpots: [],
 };
@@ -261,21 +295,17 @@ const spotsReducer = (state = initialState, action) => {
       const { spotId, url, preview } = action.payload;
       const updatedSpots = state.allSpots.map((spot) => {
         if (spot.id === spotId) {
-          const updatedImageUrls = spot.imageUrls ? [...spot.imageUrls] : [];
-          return {
-            ...spot,
-            imageUrls: [...updatedImageUrls, url],
+          return Object.assign({}, spot, {
+            imageUrls: [...(spot.imageUrls || []), url],
             preview: preview,
-          };
+          });
         }
         return spot;
       });
       const updatedSelectedSpot = state.selectedSpot
         ? {
             ...state.selectedSpot,
-            imageUrls: state.selectedSpot.imageUrls
-              ? [...state.selectedSpot.imageUrls, url]
-              : [url], // Provide a default value (an array with the new URL)
+            imageUrls: [...(state.selectedSpot.imageUrls || []), url],
             preview: preview,
           }
         : null;
